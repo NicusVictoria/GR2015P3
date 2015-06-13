@@ -1,6 +1,6 @@
 using System;
 
-namespace GraphicsPractical2
+namespace GraphicsPractical3
 {
 #if WINDOWS || XBOX
     static class Program
