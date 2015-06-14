@@ -18,11 +18,19 @@ namespace GraphicsPractical3
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        private FrameRateCounter frameRateCounter;
+
+        // Game objects and variables
+        private Camera camera;
 
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+
+            // Create and add a frame rate counter
+            this.frameRateCounter = new FrameRateCounter(this);
+            this.Components.Add(this.frameRateCounter);
         }
 
         /// <summary>
@@ -33,7 +41,21 @@ namespace GraphicsPractical3
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
+            // Copy over the device's rasterizer state to change the current fillMode
+            this.GraphicsDevice.RasterizerState = new RasterizerState() { CullMode = CullMode.None };
+            // Set up the window
+            this.graphics.PreferredBackBufferWidth = 800;
+            this.graphics.PreferredBackBufferHeight = 600;
+            this.graphics.IsFullScreen = false;
+            // Let the renderer draw and update as often as possible
+            this.graphics.SynchronizeWithVerticalRetrace = false;
+            this.IsFixedTimeStep = false;
+            // Flush the changes to the device parameters to the graphics card
+            this.graphics.ApplyChanges();
+            // Initialize the camera
+            this.camera = new Camera(new Vector3(0, 50, 100), new Vector3(0, 0, 0), new Vector3(0, 1, 0));
+
+            this.IsMouseVisible = true;
 
             base.Initialize();
         }
@@ -48,6 +70,10 @@ namespace GraphicsPractical3
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
+            // R: TODO: load effects
+            // R: TODO: Load models
+
+
         }
 
         /// <summary>
@@ -70,7 +96,8 @@ namespace GraphicsPractical3
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
 
-            // TODO: Add your update logic here
+            // Update the window title
+            this.Window.Title = "XNA Renderer | FPS: " + this.frameRateCounter.FrameRate;
 
             base.Update(gameTime);
         }

@@ -1,0 +1,7 @@
+D:\Study\Graphics\GR2015P3\GR2015P3\GraphicsPractical3\GraphicsPractical3\GraphicsPractical3\bin\x86\Debug\GraphicsPractical3.exe
+D:\Study\Graphics\GR2015P3\GR2015P3\GraphicsPractical3\GraphicsPractical3\GraphicsPractical3\bin\x86\Debug\GraphicsPractical3.pdb
+D:\Study\Graphics\GR2015P3\GR2015P3\GraphicsPractical3\GraphicsPractical3\GraphicsPractical3\obj\x86\Debug\GraphicsPractical3.csprojResolveAssemblyReference.cache
+D:\Study\Graphics\GR2015P3\GR2015P3\GraphicsPractical3\GraphicsPractical3\GraphicsPractical3\obj\x86\Debug\Microsoft.Xna.Framework.RuntimeProfile.txt
+D:\Study\Graphics\GR2015P3\GR2015P3\GraphicsPractical3\GraphicsPractical3\GraphicsPractical3\obj\x86\Debug\GraphicsPractical3.exe
+D:\Study\Graphics\GR2015P3\GR2015P3\GraphicsPractical3\GraphicsPractical3\GraphicsPractical3\obj\x86\Debug\GraphicsPractical3.pdb
+D:\Study\Graphics\GR2015P3\GR2015P3\GraphicsPractical3\GraphicsPractical3\GraphicsPractical3\bin\x86\Debug\Content\Effects\Effect1.xnb
