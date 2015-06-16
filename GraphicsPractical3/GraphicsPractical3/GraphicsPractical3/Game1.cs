@@ -25,6 +25,7 @@ namespace GraphicsPractical3
 
         // R: Models
         private Model[] models;
+        private float[] modelScales;
 
         // R: model to display
         int displayNumber;
@@ -70,6 +71,7 @@ namespace GraphicsPractical3
             bool wasReleased = true;
             // R: initialize model array
             models = new Model[6];
+            modelScales = new float[6];
 
             base.Initialize();
         }
@@ -89,6 +91,13 @@ namespace GraphicsPractical3
             // R: TODO: Load models
             this.models[0] = this.Content.Load<Model>("Models/bunny");
             this.models[0].Meshes[0].MeshParts[0].Effect = bunnyEffect;
+            this.modelScales[0] = 200.0f;
+
+            // R: model 2
+            Effect headEffect = this.Content.Load<Effect>("Effects/Effect1");
+            this.models[1] = this.Content.Load<Model>("Models/femalehead");
+            this.models[1].Meshes[0].MeshParts[0].Effect = headEffect;
+            this.modelScales[1] = 1f;
 
         }
 
@@ -141,9 +150,15 @@ namespace GraphicsPractical3
             GraphicsDevice.Clear(ClearOptions.Target | ClearOptions.DepthBuffer, Color.CornflowerBlue, 1.0f, 0);
 
             // TODO: Add your drawing code here
+            // R: Draw the scenes that have instantiated models
+            ModelMesh mesh;
+            Effect effect;
+            Matrix World;
+
+            // R: draw scene 1
             // R: Get the model's only mesh
-            ModelMesh mesh = this.models[0].Meshes[0];
-            Effect effect = mesh.Effects[0];
+            mesh = this.models[0].Meshes[0];
+            effect = mesh.Effects[0];
 
             // R: Set the effect parameters
             effect.CurrentTechnique = effect.Techniques["Technique1"];
@@ -151,9 +166,27 @@ namespace GraphicsPractical3
             this.camera.SetEffectParameters(effect);
 
             // R: create the world matrix for the model
-            Matrix World =  Matrix.CreateScale(100f) * Matrix.CreateTranslation(10*displayNumber, 0, 0);
+            World = Matrix.CreateScale(150f) * Matrix.CreateTranslation(100 * (displayNumber), -12, 0);
 
-            // R:
+            // R: set the world matrix to the effect
+            effect.Parameters["World"].SetValue(World);
+
+            mesh.Draw();
+
+            // R: draw scene 2
+            // R: Get the model's only mesh
+            mesh = this.models[1].Meshes[0];
+            effect = mesh.Effects[0];
+
+            // R: Set the effect parameters
+            effect.CurrentTechnique = effect.Techniques["Technique1"];
+            // Matrices for 3D perspective projection
+            this.camera.SetEffectParameters(effect);
+
+            // R: create the world matrix for the model
+            World = Matrix.CreateScale(0.5f) * Matrix.CreateTranslation(100 * (displayNumber-1), 0, 0);
+
+            // R: set the world matrix to the effect
             effect.Parameters["World"].SetValue(World);
 
             mesh.Draw();
