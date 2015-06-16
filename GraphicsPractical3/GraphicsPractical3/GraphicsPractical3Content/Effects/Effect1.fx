@@ -23,7 +23,8 @@ struct VertexShaderOutput
 
 VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
 {
-    VertexShaderOutput output;
+    // Allocate an empty output struct
+	VertexShaderOutput output = (VertexShaderOutput)0;
 
     float4 worldPosition = mul(input.Position, World);
     float4 viewPosition = mul(worldPosition, View);
@@ -38,7 +39,7 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 {
     // TODO: add your pixel shader code here.
 
-    return float4(1, 0, 0, 1);
+    return float4(1, 1, 1, 0.5);
 }
 
 technique Technique1

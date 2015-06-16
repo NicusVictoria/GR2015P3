@@ -23,6 +23,14 @@ namespace GraphicsPractical3
         // Game objects and variables
         private Camera camera;
 
+        // R: Models
+        private Model[] models;
+
+        // R: model to display
+        int displayNumber;
+        bool wasReleased;
+
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -57,6 +65,12 @@ namespace GraphicsPractical3
 
             this.IsMouseVisible = true;
 
+            // R: initialize displayNumber
+            displayNumber = 0;
+            bool wasReleased = true;
+            // R: initialize model array
+            models = new Model[6];
+
             base.Initialize();
         }
 
@@ -71,8 +85,10 @@ namespace GraphicsPractical3
 
             // TODO: use this.Content to load your game content here
             // R: TODO: load effects
+            Effect bunnyEffect = this.Content.Load<Effect>("Effects/Effect1");
             // R: TODO: Load models
-
+            this.models[0] = this.Content.Load<Model>("Models/bunny");
+            this.models[0].Meshes[0].MeshParts[0].Effect = bunnyEffect;
 
         }
 
@@ -96,6 +112,20 @@ namespace GraphicsPractical3
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
 
+            // added: Get keyboard state
+            KeyboardState kbState = Keyboard.GetState();
+            // added: switch views at the press of spacebar
+            if (wasReleased && kbState.IsKeyDown(Keys.Space))
+            {
+                displayNumber = (displayNumber + 1) % models.Length;
+                wasReleased = false;
+            }
+            if (!wasReleased && kbState.IsKeyUp(Keys.Space))
+            {
+                wasReleased = true;
+            }
+
+
             // Update the window title
             this.Window.Title = "XNA Renderer | FPS: " + this.frameRateCounter.FrameRate;
 
@@ -108,9 +138,25 @@ namespace GraphicsPractical3
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(ClearOptions.Target | ClearOptions.DepthBuffer, Color.CornflowerBlue, 1.0f, 0);
 
             // TODO: Add your drawing code here
+            // R: Get the model's only mesh
+            ModelMesh mesh = this.models[0].Meshes[0];
+            Effect effect = mesh.Effects[0];
+
+            // R: Set the effect parameters
+            effect.CurrentTechnique = effect.Techniques["Technique1"];
+            // Matrices for 3D perspective projection
+            this.camera.SetEffectParameters(effect);
+
+            // R: create the world matrix for the model
+            Matrix World =  Matrix.CreateScale(100f) * Matrix.CreateTranslation(10*displayNumber, 0, 0);
+
+            // R:
+            effect.Parameters["World"].SetValue(World);
+
+            mesh.Draw();
 
             base.Draw(gameTime);
         }
