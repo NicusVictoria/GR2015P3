@@ -21,7 +21,10 @@ namespace GraphicsPractical3
         private FrameRateCounter frameRateCounter;
 
         // Game objects and variables
+        // R: the camera object
         private Camera camera;
+        // R: the angle to rotate the world with
+        private float angle;
 
         // R: Models
         private Model[] models;
@@ -29,9 +32,11 @@ namespace GraphicsPractical3
 
         // R: model to display
         int displayNumber;
+        // R: flag that ensures only one switch per keypress
         bool wasReleased;
 
 
+        // R: constructor for the game1 class
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -63,6 +68,8 @@ namespace GraphicsPractical3
             this.graphics.ApplyChanges();
             // Initialize the camera
             this.camera = new Camera(new Vector3(0, 50, 100), new Vector3(0, 0, 0), new Vector3(0, 1, 0));
+            // R: initialize the view angle
+            angle = 0.0f;
 
             this.IsMouseVisible = true;
 
@@ -118,6 +125,7 @@ namespace GraphicsPractical3
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+            // R: read and process keyboard input
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
@@ -134,10 +142,15 @@ namespace GraphicsPractical3
             {
                 wasReleased = true;
             }
+            // R: exit the game when the escape key is hit
             if (kbState.IsKeyDown(Keys.Escape))
             {
                 this.Exit();
             }
+            
+            // R: rotate: update the viewing angle
+            float timeStep = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            this.angle += timeStep * 1.0f; // this last one is the rotation speed
 
             // Update the window title
             this.Window.Title = "XNA Renderer | FPS: " + this.frameRateCounter.FrameRate;
@@ -166,7 +179,7 @@ namespace GraphicsPractical3
             this.camera.SetEffectParameters(effect0);
 
             // R: create the world matrix for the model
-            Matrix World0 = Matrix.CreateScale(150f) * Matrix.CreateTranslation(100 * (displayNumber), -12, 0);
+            Matrix World0 = Matrix.CreateScale(150f) * Matrix.CreateTranslation(100 * (displayNumber), -12, 0) * Matrix.CreateRotationY(angle);
 
             // R: set the world matrix to the effect
             effect0.Parameters["World"].SetValue(World0);
@@ -176,7 +189,7 @@ namespace GraphicsPractical3
             lightPositions[0] = new Vector4(50.0f, 50.0f, 50.0f, 0.0f);
             lightPositions[1] = new Vector4(-50.0f, 50.0f, 50.0f, 0.0f);
             lightPositions[2] = new Vector4(-50.0f, 50.0f, -50.0f, 0.0f);
-            lightPositions[3] = new Vector4(50.0f, 50.0f, 050.0f, 0.0f);
+            lightPositions[3] = new Vector4(50.0f, 50.0f, -50.0f, 0.0f);
             lightPositions[4] = new Vector4(0.0f, 50.0f, 0.0f, 0.0f);
             effect0.Parameters["LightPositions"].SetValue(lightPositions);
 

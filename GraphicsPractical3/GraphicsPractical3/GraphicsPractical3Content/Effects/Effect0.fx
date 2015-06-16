@@ -21,7 +21,9 @@ struct VertexShaderInput
 struct VertexShaderOutput
 {
     float4 Position : POSITION0;
-	float4 ColorL : TEXCOORD0;
+	float4 Normal3D : TEXCOORD0;
+	float4 WorldPosition : TEXCOORD1;
+	float4 PixelPosition : TEXCOORD2;
 
     // TODO: add vertex shader outputs such as colors and texture
     // coordinates here. These values will automatically be interpolated
@@ -29,33 +31,42 @@ struct VertexShaderOutput
 };
 
 // R: added functions
-float4 LambertianColor(float4 normal, float3 location,  float3 lightPosition, float4 lightColor)
+// R: LambertianColor() calculates the Lambertian shading of each vertex
+float4 LambertianColor(float4 normal, float3 location,  float3 lightPosition, float4 lightColor, float4 pixelPosition)
 {
-	// added: define the output variable
+	// define the output variable
 	float4 color;
 
-	// added: define the direction of the light
+	// define the direction of the light
 	float3 lightDirection = normalize(location-lightPosition);	
 
-	// added: extract the rotation+scale matrix from the World matrix
-	float3x3 rotateAndScale = (float3x3) World;//InverseTransposeWorld;
+	// extract the rotation+scale matrix from the World matrix
+	float3x3 rotateAndScale = (float3x3) InverseTransposeWorld;
 	
-	// added: rotate and scale the normal according to world transformations
+	// rotate and scale the normal according to world transformations
 	float3 rotatedNormal = mul(normal.xyz, rotateAndScale);
 
-	// added: inverse and normalize the normal
+	// inverse and normalize the normal
 	float3 inversedNormal = normalize(mul(-1, rotatedNormal));
 
-	// added: calculate the dot product between the light direction and the inversed normal
-	// R; to determine the light intensity
+	// calculate the dot product between the light direction and the inversed normal
+	// to determine the light intensity
 	float dotProduct = dot(inversedNormal, lightDirection);
 
-	// added: calculate the final coloadded: DiffuseColor * DiffuseIntensity + AmbientLight
-	color.xyz = lightColor * max(0.0f, dotProduct);
-	// added: set alpha to zero
+	// BlinnPhong
+	// added:  Define all undefined variables of the formula:
+	float3 cameraPosition = {0.0f, 50.0f, 100.0f};
+	float3 v = normalize(pixelPosition.xyz-cameraPosition.xyz);
+
+	// added: calculate h; the bisector of the angle between the direction of the light and the viewingdirection
+	float3 h = normalize(v+lightDirection);
+	
+	// calculate the final coloadded: DiffuseColor * DiffuseIntensity + AmbientLight
+	color.xyz = lightColor * max(0.0f, dotProduct) + lightColor * 25.0f * pow(max(0.0f, dot(inversedNormal, h)), 1000);
+	// set alpha to zero
 	color.w = 0.0f;
 	
-	// added: return the color
+	// return the color
 	return color;
 }
 
@@ -66,24 +77,26 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
 
     float4 worldPosition = mul(input.Position3D, World);
     float4 viewPosition = mul(worldPosition, View);
-    output.Position = mul(viewPosition, Projection);
+    float4 PixelPosition = mul(viewPosition, Projection);
+	output.Position = PixelPosition;
 	
-	float4 color = float4(0,0,0,0);
-	[unroll] for (uint i = 0; i < MAX_LIGHTS; i++)
-	{
-		float4 lightWorldPosition = mul(LightPositions[i], World);
-		color += LambertianColor(input.Normal3D, worldPosition.xyz, lightWorldPosition.xyz, LightColors[i]);
-	}
-	output.ColorL = color;
+	
+	output.Normal3D = input.Normal3D;
+	output.WorldPosition = worldPosition;
+	output.PixelPosition = PixelPosition;
 
     return output;
 }
 
 float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 {
-    // TODO: add your pixel shader code here.
-
-    return input.ColorL;
+    float4 color = float4(0,0,0,0);
+	[unroll] for (uint i = 0; i < MAX_LIGHTS; i++)
+	{
+		float4 lightWorldPosition = mul(LightPositions[i], World);
+		color += LambertianColor(input.Normal3D, input.WorldPosition.xyz, lightWorldPosition.xyz, LightColors[i], input.PixelPosition);
+	}
+	return color;
 }
 
 technique Technique1
@@ -91,9 +104,9 @@ technique Technique1
     pass Pass1
     {
         // TODO: set renderstates here.
-
-        VertexShader = compile vs_2_0 VertexShaderFunction();
-        PixelShader = compile ps_2_0 PixelShaderFunction();
+		// R: updated to Shader Model 3
+        VertexShader = compile vs_3_0 VertexShaderFunction();
+        PixelShader = compile ps_3_0 PixelShaderFunction();
     }
 }
 
