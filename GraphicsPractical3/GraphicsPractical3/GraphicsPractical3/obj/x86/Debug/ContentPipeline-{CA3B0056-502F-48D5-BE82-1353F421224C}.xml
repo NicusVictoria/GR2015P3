@@ -50,6 +50,15 @@
       <Output>D:\Study\Graphics\GR2015P3\GR2015P3\GraphicsPractical3\GraphicsPractical3\GraphicsPractical3\obj\x86\Debug\Models\femalehead_0.xml</Output>
       <Time>2015-06-16T11:13:54.3538531+02:00</Time>
     </Item>
+    <Item>
+      <Source>Effects\Effect0.fx</Source>
+      <Name>Effects\Effect0</Name>
+      <Importer>EffectImporter</Importer>
+      <Processor>EffectProcessor</Processor>
+      <Options>None</Options>
+      <Output>D:\Study\Graphics\GR2015P3\GR2015P3\GraphicsPractical3\GraphicsPractical3\GraphicsPractical3\bin\x86\Debug\Content\Effects\Effect0.xnb</Output>
+      <Time>2015-06-16T17:05:09.687083+02:00</Time>
+    </Item>
     <BuildSuccessful>true</BuildSuccessful>
     <Settings>
       <ContentProjectGUID>{CA3B0056-502F-48D5-BE82-1353F421224C}</ContentProjectGUID>
