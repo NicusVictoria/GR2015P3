@@ -97,15 +97,39 @@ namespace GraphicsPractical3
             Effect bunnyEffect = this.Content.Load<Effect>("Effects/Effect0");
 
             // R: TODO: Load models
+            // R: model 0
             this.models[0] = this.Content.Load<Model>("Models/bunny");
             this.models[0].Meshes[0].MeshParts[0].Effect = bunnyEffect;
             this.modelScales[0] = 200.0f;
 
-            // R: model 2
+            // R: model 1
             Effect headEffect = this.Content.Load<Effect>("Effects/Effect1");
             this.models[1] = this.Content.Load<Model>("Models/femalehead");
             this.models[1].Meshes[0].MeshParts[0].Effect = headEffect;
             this.modelScales[1] = 1f;
+
+            // R: Setup the effect for scene 0
+            Effect effect0 = this.models[0].Meshes[0].Effects[0];
+
+            // R: Set the effect parameters
+            effect0.CurrentTechnique = effect0.Techniques["Technique1"];
+
+            // R: Set the lights
+            Vector4[] lightPositions = new Vector4[5];
+            lightPositions[0] = new Vector4(50.0f, 50.0f, 50.0f, 0.0f);
+            lightPositions[1] = new Vector4(-50.0f, 50.0f, 50.0f, 0.0f);
+            lightPositions[2] = new Vector4(-50.0f, 50.0f, -50.0f, 0.0f);
+            lightPositions[3] = new Vector4(50.0f, 50.0f, -50.0f, 0.0f);
+            lightPositions[4] = new Vector4(0.0f, 50.0f, 0.0f, 0.0f);
+            effect0.Parameters["LightPositions"].SetValue(lightPositions);
+
+            Vector4[] lightColors = new Vector4[5];
+            lightColors[0] = new Vector4(0.6f, 0.0f, 0.0f, 0.0f);
+            lightColors[1] = new Vector4(0.0f, 0.0f, 0.6f, 0.0f);
+            lightColors[2] = new Vector4(0.0f, 0.6f, 0.0f, 0.0f);
+            lightColors[3] = new Vector4(0.3f, 0.3f, 0.0f, 0.0f);
+            lightColors[4] = new Vector4(0.2f, 0.2f, 0.2f, 0.0f);
+            effect0.Parameters["LightColors"].SetValue(lightColors);
 
         }
 
@@ -155,6 +179,21 @@ namespace GraphicsPractical3
             // Update the window title
             this.Window.Title = "XNA Renderer | FPS: " + this.frameRateCounter.FrameRate;
 
+            // R: update the scenes
+            // R: update scene 0
+            // R: Get the model's only effect
+            Effect effect0 = this.models[0].Meshes[0].Effects[0];
+
+            // Matrices for 3D perspective projection
+            this.camera.SetEffectParameters(effect0);
+
+            // R: create the world matrix for the model
+            Matrix World0 = Matrix.CreateScale(150f) * Matrix.CreateTranslation(100 * (displayNumber), -12, 0) * Matrix.CreateRotationY(angle);
+
+            // R: set the world matrix to the effect
+            effect0.Parameters["World"].SetValue(World0);
+            effect0.Parameters["InverseTransposeWorld"].SetValue(Matrix.Transpose(Matrix.Invert(World0)));
+
             base.Update(gameTime);
         }
 
@@ -169,40 +208,14 @@ namespace GraphicsPractical3
             // TODO: Add your drawing code here
             // R: Draw the scenes 
             // R: draw scene 0
-            // R: Get the model's only mesh
-            ModelMesh mesh0 = this.models[0].Meshes[0];
-            Effect effect0 = mesh0.Effects[0];
+            if (displayNumber == 0)
+            {
+                // R: get the model's only mesh
+                ModelMesh mesh0 = this.models[0].Meshes[0];
 
-            // R: Set the effect parameters
-            effect0.CurrentTechnique = effect0.Techniques["Technique1"];
-            // Matrices for 3D perspective projection
-            this.camera.SetEffectParameters(effect0);
-
-            // R: create the world matrix for the model
-            Matrix World0 = Matrix.CreateScale(150f) * Matrix.CreateTranslation(100 * (displayNumber), -12, 0) * Matrix.CreateRotationY(angle);
-
-            // R: set the world matrix to the effect
-            effect0.Parameters["World"].SetValue(World0);
-            effect0.Parameters["InverseTransposeWorld"].SetValue(Matrix.Transpose(Matrix.Invert(World0)));
-
-            Vector4[] lightPositions = new Vector4[5];
-            lightPositions[0] = new Vector4(50.0f, 50.0f, 50.0f, 0.0f);
-            lightPositions[1] = new Vector4(-50.0f, 50.0f, 50.0f, 0.0f);
-            lightPositions[2] = new Vector4(-50.0f, 50.0f, -50.0f, 0.0f);
-            lightPositions[3] = new Vector4(50.0f, 50.0f, -50.0f, 0.0f);
-            lightPositions[4] = new Vector4(0.0f, 50.0f, 0.0f, 0.0f);
-            effect0.Parameters["LightPositions"].SetValue(lightPositions);
-
-            Vector4[] lightColors = new Vector4[5];
-            lightColors[0] = new Vector4(0.6f, 0.0f, 0.0f, 0.0f);
-            lightColors[1] = new Vector4(0.0f, 0.0f, 0.6f, 0.0f);
-            lightColors[2] = new Vector4(0.0f, 0.6f, 0.0f, 0.0f);
-            lightColors[3] = new Vector4(0.3f, 0.3f, 0.0f, 0.0f);
-            lightColors[4] = new Vector4(0.2f, 0.2f, 0.2f, 0.0f);
-            effect0.Parameters["LightColors"].SetValue(lightColors);
-
-
-            mesh0.Draw();
+                // R: draw the mesh
+                mesh0.Draw();
+            }
 
             // R: draw scene 1
             // R: Get the model's only mesh
