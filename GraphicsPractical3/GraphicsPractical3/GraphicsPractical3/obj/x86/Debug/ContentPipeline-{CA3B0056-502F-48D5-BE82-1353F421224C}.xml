@@ -17,7 +17,7 @@
       <Processor>EffectProcessor</Processor>
       <Options>None</Options>
       <Output>D:\Study\Graphics\GR2015P3\GR2015P3\GraphicsPractical3\GraphicsPractical3\GraphicsPractical3\bin\x86\Debug\Content\Effects\Effect0.xnb</Output>
-      <Time>2015-06-16T20:01:27.9338251+02:00</Time>
+      <Time>2015-06-28T11:31:44.2345498+02:00</Time>
     </Item>
     <Item>
       <Source>Models\bunny.fbx</Source>
@@ -66,7 +66,7 @@
       <Processor>EffectProcessor</Processor>
       <Options>None</Options>
       <Output>D:\Study\Graphics\GR2015P3\GR2015P3\GraphicsPractical3\GraphicsPractical3\GraphicsPractical3\bin\x86\Debug\Content\Effects\Effect2.xnb</Output>
-      <Time>2015-06-27T11:12:59.2599381+02:00</Time>
+      <Time>2015-06-28T11:31:44.2381805+02:00</Time>
     </Item>
     <Item>
       <Source>Models\bunny2.fbx</Source>
@@ -75,10 +75,10 @@
       <Processor>ModelProcessor</Processor>
       <Options>None</Options>
       <Output>D:\Study\Graphics\GR2015P3\GR2015P3\GraphicsPractical3\GraphicsPractical3\GraphicsPractical3\bin\x86\Debug\Content\Models\bunny2.xnb</Output>
-      <Time>2015-06-21T17:41:13.8089102+02:00</Time>
+      <Time>2015-06-28T11:31:44.2888853+02:00</Time>
       <Dependency>
         <Key>D:\Study\Graphics\GR2015P3\GR2015P3\GraphicsPractical3\GraphicsPractical3\GraphicsPractical3\obj\x86\Debug\Models\bunny2_0.xml</Key>
-        <Value>2015-06-21T17:41:32.9168999+02:00</Value>
+        <Value>2015-06-28T11:32:03.8217199+02:00</Value>
       </Dependency>
     </Item>
     <Item>
@@ -86,7 +86,7 @@
       <Importer>FbxImporter</Importer>
       <Options>IntermediateFile, DontCacheImportedData</Options>
       <Output>D:\Study\Graphics\GR2015P3\GR2015P3\GraphicsPractical3\GraphicsPractical3\GraphicsPractical3\obj\x86\Debug\Models\bunny2_0.xml</Output>
-      <Time>2015-06-21T17:41:13.8089102+02:00</Time>
+      <Time>2015-06-28T11:31:44.2888853+02:00</Time>
     </Item>
     <Item>
       <Source>Effects\Effect3.fx</Source>
@@ -95,7 +95,7 @@
       <Processor>EffectProcessor</Processor>
       <Options>None</Options>
       <Output>D:\Study\Graphics\GR2015P3\GR2015P3\GraphicsPractical3\GraphicsPractical3\GraphicsPractical3\bin\x86\Debug\Content\Effects\Effect3.xnb</Output>
-      <Time>2015-06-28T11:20:52.4204061+02:00</Time>
+      <Time>2015-06-28T13:58:28.0046391+02:00</Time>
     </Item>
     <BuildSuccessful>true</BuildSuccessful>
     <Settings>
