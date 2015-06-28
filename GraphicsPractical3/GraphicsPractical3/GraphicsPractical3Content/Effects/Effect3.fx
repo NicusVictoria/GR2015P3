@@ -11,7 +11,7 @@ float BlurDistanceY;
 // added: TLV for the texture to be blurred
 Texture2D t;
 // R: 
-float blurKernel[KERNEL_SIZE];
+float BlurKernel[KERNEL_SIZE];
 
 
 
@@ -62,13 +62,13 @@ float4 HorizontalBlurFunction(VertexShaderOutput input) : COLOR0
 	color = float4(0, 0, 0, 0);
 
 	// 
-	[unroll] for (int i = (-1*(KERNEL_SIZE-1)/2); i < ((KERNEL_SIZE-1)/2)+1; i++)
+	[unroll] for (int i = 0; i < KERNEL_SIZE; i++)
 	{
 		float2 BlurLocation = input.TexCoord;
-		BlurLocation.x += i*BlurDistanceX;
-		color += tex2D(TextureSampler, BlurLocation);
+		BlurLocation.x += (i-((KERNEL_SIZE-1)/2))*BlurDistanceX;
+		color += tex2D(TextureSampler, BlurLocation) * BlurKernel[i];
 	}
-	color /= KERNEL_SIZE;
+	
 	return color;
 }
 
@@ -79,13 +79,13 @@ float4 VerticalBlurFunction(VertexShaderOutput input) : COLOR0
 	color = float4(0, 0, 0, 0);
 
 	// 
-	[unroll] for (int i = (-1*(KERNEL_SIZE-1)/2); i < ((KERNEL_SIZE-1)/2)+1; i++)
+	[unroll] for (int i = 0; i < KERNEL_SIZE; i++)
 	{
 		float2 BlurLocation = input.TexCoord;
-		BlurLocation.y += i*BlurDistanceY;
-		color += tex2D(TextureSampler, BlurLocation);
+		BlurLocation.y += (i-((KERNEL_SIZE-1)/2))*BlurDistanceY;
+		color += tex2D(TextureSampler, BlurLocation) * BlurKernel[i];
 	}
-	color /= KERNEL_SIZE;
+	
 	return color;
 }
 technique Technique1
