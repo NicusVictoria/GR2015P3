@@ -177,8 +177,10 @@ namespace GraphicsPractical3
                 0.027289f,
                 0.00072f
             };
+            // Normalize the distribution
+            gaussianDistribution = this.normalize(gaussianDistribution);
             // R: pass the 1D kernel to the effect
-            effect3.Parameters["blurKernel"].SetValue(gaussianDistribution);
+            effect3.Parameters["BlurKernel"].SetValue(gaussianDistribution);
         }
 
         /// <summary>
@@ -383,6 +385,7 @@ namespace GraphicsPractical3
             base.Draw(gameTime);
         }
 
+        // set up the projection quad used for blurring
         private void setupQuad()
         {
             // Normal points up
@@ -407,6 +410,25 @@ namespace GraphicsPractical3
             this.quadVertices[3].TextureCoordinate = new Vector2(1, 1);
 
             this.quadIndices = new short[] { 0, 1, 2, 1, 2, 3 };
+        }
+
+        // This function normalizes an array of floats
+        // used to normalize the gaussian distribution for blurring
+        private float[] normalize(float[] values)
+        {
+            // declare the sum of the array
+            float sum = 0;
+            //declare the output array
+            float[] result = new float[values.Length];
+            foreach (float f in values)
+            {
+                sum += f;
+            }
+            for (int i = 0; i < values.Length; i++ )
+            {
+                result[i] = values[i] / sum;
+            }
+            return values;
         }
     }
 }
