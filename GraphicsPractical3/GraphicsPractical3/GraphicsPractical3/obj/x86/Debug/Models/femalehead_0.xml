@@ -3,7 +3,7 @@
   <Asset Type="Graphics:NodeContent">
     <Name>RootNode</Name>
     <Identity>
-      <SourceFilename>D:\Study\Graphics\GR2015P3\GR2015P3\GraphicsPractical3\GraphicsPractical3\GraphicsPractical3Content\Models\femalehead.fbx</SourceFilename>
+      <SourceFilename>C:\Users\Nicus\Documents\GitHub\GR2015P3\GraphicsPractical3\GraphicsPractical3\GraphicsPractical3Content\Models\femalehead.fbx</SourceFilename>
       <SourceTool>FbxImporter</SourceTool>
     </Identity>
     <Transform>1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</Transform>
@@ -62,7 +62,7 @@
     <Resource ID="#Resource1" Type="Graphics:BasicMaterialContent">
       <Name>lambert1</Name>
       <Identity>
-        <SourceFilename>D:\Study\Graphics\GR2015P3\GR2015P3\GraphicsPractical3\GraphicsPractical3\GraphicsPractical3Content\Models\femalehead.fbx</SourceFilename>
+        <SourceFilename>C:\Users\Nicus\Documents\GitHub\GR2015P3\GraphicsPractical3\GraphicsPractical3\GraphicsPractical3Content\Models\femalehead.fbx</SourceFilename>
         <SourceTool>FbxImporter</SourceTool>
       </Identity>
       <OpaqueData>
