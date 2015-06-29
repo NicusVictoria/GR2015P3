@@ -23,6 +23,8 @@ namespace GraphicsPractical3
         // Game objects and variables
         // R: the camera object
         private Camera camera;
+        // R: the initial Camera position
+        private Vector3 cameraPosition;
         // R: the angle to rotate the world with
         private float angle;
 
@@ -39,13 +41,22 @@ namespace GraphicsPractical3
         private RenderTarget2D renderTargetOriginal;
         private RenderTarget2D renderTargeHorizontalBlur;
 
-
-        private Effect effect3;
+        // Effect for the blur
+        private Effect effect2Blur;
+        // vertices and indices for the blurQuad
         private VertexPositionNormalTexture[] quadVertices;
         private short[] quadIndices;
 
         // R: filter used for the Gaussian blur
         float[] gaussianDistribution;
+
+        // vertices for the mirrorQuad
+        private VertexPositionNormalTexture[] mirrorQuad;
+        // Effect for drawing the mirror
+        Effect mirrorEffect;
+        // scale and position of the mirrorQuad
+        float mirrorScale;
+        Vector3 mirrorPosition;
         
         // R: constructor for the game1 class
         public Game1()
@@ -68,6 +79,8 @@ namespace GraphicsPractical3
         {
             // Copy over the device's rasterizer state to change the current fillMode
             this.GraphicsDevice.RasterizerState = new RasterizerState() { CullMode = CullMode.None };
+            // R: Turn on the Depth stencil
+            this.graphics.PreferredDepthStencilFormat = DepthFormat.Depth24Stencil8;
             // Set up the window
             this.graphics.PreferredBackBufferWidth = 800;
             this.graphics.PreferredBackBufferHeight = 600;
@@ -78,7 +91,8 @@ namespace GraphicsPractical3
             // Flush the changes to the device parameters to the graphics card
             this.graphics.ApplyChanges();
             // Initialize the camera
-            this.camera = new Camera(new Vector3(0, 50, 100), new Vector3(0, 0, 0), new Vector3(0, 1, 0));
+            cameraPosition = new Vector3(0, 50, 100);
+            this.camera = new Camera(cameraPosition, new Vector3(0, 0, 0), new Vector3(0, 1, 0));
             // R: initialize the view angle
             angle = 0.0f;
 
@@ -87,7 +101,7 @@ namespace GraphicsPractical3
             // R: initialize displayNumber
             displayNumber = 0;
             bool wasReleased = true;
-            // R: initialize model array
+            // R: initialize model array and scale array (due to the different sizes of models)
             models = new Model[6];
             modelScales = new float[6];
 
@@ -105,8 +119,8 @@ namespace GraphicsPractical3
 
             // Set up render targets for blurring
             PresentationParameters pp = GraphicsDevice.PresentationParameters;
-            renderTargetOriginal = new RenderTarget2D(GraphicsDevice, pp.BackBufferWidth, pp.BackBufferHeight, true, GraphicsDevice.DisplayMode.Format, DepthFormat.Depth24);
-            renderTargeHorizontalBlur = new RenderTarget2D(GraphicsDevice, pp.BackBufferWidth, pp.BackBufferHeight, true, GraphicsDevice.DisplayMode.Format, DepthFormat.Depth24);
+            renderTargetOriginal = new RenderTarget2D(GraphicsDevice, pp.BackBufferWidth, pp.BackBufferHeight, true, GraphicsDevice.DisplayMode.Format, DepthFormat.Depth24Stencil8);
+            renderTargeHorizontalBlur = new RenderTarget2D(GraphicsDevice, pp.BackBufferWidth, pp.BackBufferHeight, true, GraphicsDevice.DisplayMode.Format, DepthFormat.Depth24Stencil8);
 
             // TODO: use this.Content to load your game content here
             // R: TODO: load effects
@@ -161,7 +175,7 @@ namespace GraphicsPractical3
             effect2.Parameters["LightColors"].SetValue(lightColors);
 
 
-            effect3 = this.Content.Load<Effect>("Effects/Effect3");
+            effect2Blur = this.Content.Load<Effect>("Effects/Effect2_blur");
             this.setupQuad();
 
             // R: load the gaussian blur
@@ -180,7 +194,15 @@ namespace GraphicsPractical3
             // Normalize the distribution
             gaussianDistribution = this.normalize(gaussianDistribution);
             // R: pass the 1D kernel to the effect
-            effect3.Parameters["BlurKernel"].SetValue(gaussianDistribution);
+            effect2Blur.Parameters["BlurKernel"].SetValue(gaussianDistribution);
+
+            // R: scene 3
+            mirrorEffect = this.Content.Load<Effect>("Effects/Effect3");
+            mirrorEffect.CurrentTechnique = mirrorEffect.Techniques["Technique1"];
+            mirrorScale = 35.0f;
+            // R: define the position of the mirror
+            mirrorPosition = new Vector3(-0.5f * mirrorScale, 0, -40.0f);
+            this.setupMirror();
         }
 
         /// <summary>
@@ -258,11 +280,36 @@ namespace GraphicsPractical3
                 this.camera.SetEffectParameters(effect2);
 
                 // R: create the world matrix for the model
-                Matrix World2 = Matrix.CreateScale(150f) * Matrix.CreateTranslation(100 * (displayNumber-2), -12, 0) * Matrix.CreateRotationY(angle);
+                Matrix World2 = Matrix.CreateScale(150f) * Matrix.CreateTranslation(100 * (displayNumber - 2), -12, 0) * Matrix.CreateRotationY(angle);
 
                 // R: set the world matrix to the effect
                 effect2.Parameters["World"].SetValue(World2);
                 effect2.Parameters["InverseTransposeWorld"].SetValue(Matrix.Transpose(Matrix.Invert(World2)));
+            } 
+            
+            // R: update scene 3
+            // it's the same as scene 2
+            if (displayNumber == 3)
+            {
+                // R: update the scene
+                // R: Get the model's only effect
+                Effect effect2 = this.models[2].Meshes[0].Effects[0];
+
+                // Matrices for 3D perspective projection
+                this.camera.SetEffectParameters(effect2);
+
+                // R: create the world matrix for the model
+                Matrix World3 = Matrix.CreateScale(150f) * Matrix.CreateTranslation(100 * (displayNumber - 3), -12, 0) * Matrix.CreateRotationY(angle);
+
+                // R: set the world matrix to the effect
+                effect2.Parameters["World"].SetValue(World3);
+                effect2.Parameters["InverseTransposeWorld"].SetValue(Matrix.Transpose(Matrix.Invert(World3)));
+
+                // R: update the mirror
+                // R: create the world position matrix for the mirrorQuad
+                Matrix mirrorWorld = Matrix.CreateScale(mirrorScale) * Matrix.CreateTranslation(mirrorPosition);
+                mirrorEffect.Parameters["World"].SetValue(mirrorWorld);
+                this.camera.SetEffectParameters(mirrorEffect);
             }
 
 
@@ -329,26 +376,27 @@ namespace GraphicsPractical3
 
                 // R: draw the mesh
                 mesh2.Draw();
+
+                // R: draw the texture to the second renderTarget
                 GraphicsDevice.SetRenderTarget(renderTargeHorizontalBlur);
                 GraphicsDevice.Clear(ClearOptions.Target | ClearOptions.DepthBuffer, Color.CornflowerBlue, 1.0f, 0);
 
-                // R: draw the texture to the second renderTarget
-
+                // R: set the camera perpendicular on the blurQuad
                 this.camera.Eye = new Vector3(0, 0, 100);
 
                 // added: set the technique of the quad
-                this.effect3.CurrentTechnique = effect3.Techniques["Technique1"];
+                this.effect2Blur.CurrentTechnique = effect2Blur.Techniques["Technique1"];
                 // Matrices for 3D perspective projection
-                this.camera.SetEffectParameters(effect3);
-                this.effect3.Parameters["World"].SetValue(Matrix.CreateScale(55.5f));
-                this.effect3.Parameters["t"].SetValue((Texture2D)renderTargetOriginal);
+                this.camera.SetEffectParameters(effect2Blur);
+                this.effect2Blur.Parameters["World"].SetValue(Matrix.CreateScale(55.5f));
+                this.effect2Blur.Parameters["t"].SetValue((Texture2D)renderTargetOriginal);
 
                 float BlurDistanceX = 1.0f / (float)this.graphics.PreferredBackBufferWidth;
-                this.effect3.Parameters["BlurDistanceX"].SetValue(BlurDistanceX);
+                this.effect2Blur.Parameters["BlurDistanceX"].SetValue(BlurDistanceX);
 
                 // added: draw the quad
                 // added: apply effect passes
-                foreach (EffectPass pass in this.effect3.CurrentTechnique.Passes)
+                foreach (EffectPass pass in this.effect2Blur.CurrentTechnique.Passes)
                 {
                     pass.Apply();
                 }
@@ -360,18 +408,18 @@ namespace GraphicsPractical3
                 // R: draw to the screen
 
                 // added: set the technique of the quad
-                this.effect3.CurrentTechnique = effect3.Techniques["Technique2"];
+                this.effect2Blur.CurrentTechnique = effect2Blur.Techniques["Technique2"];
                 // Matrices for 3D perspective projection
-                this.camera.SetEffectParameters(effect3);
-                this.effect3.Parameters["World"].SetValue(Matrix.CreateScale(55.5f));
-                this.effect3.Parameters["t"].SetValue((Texture2D)renderTargeHorizontalBlur);
+                this.camera.SetEffectParameters(effect2Blur);
+                this.effect2Blur.Parameters["World"].SetValue(Matrix.CreateScale(55.5f));
+                this.effect2Blur.Parameters["t"].SetValue((Texture2D)renderTargeHorizontalBlur);
 
                 float BlurDistanceY = 1.0f / (float)this.graphics.PreferredBackBufferHeight;
-                this.effect3.Parameters["BlurDistanceY"].SetValue(BlurDistanceY);
+                this.effect2Blur.Parameters["BlurDistanceY"].SetValue(BlurDistanceY);
 
                 // added: draw the quad
                 // added: apply effect passes
-                foreach (EffectPass pass in this.effect3.CurrentTechnique.Passes)
+                foreach (EffectPass pass in this.effect2Blur.CurrentTechnique.Passes)
                 {
                     pass.Apply();
                 }
@@ -380,6 +428,59 @@ namespace GraphicsPractical3
                 this.GraphicsDevice.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, this.quadVertices, 0, this.quadVertices.Length, this.quadIndices, 0, this.quadIndices.Length / 3);
 
                 this.camera.Eye = new Vector3(0, 50, 100);
+            }
+
+            // R: draw scene 3
+            if (displayNumber == 3)
+            {
+                // R: get the model's only mesh
+                ModelMesh mesh2 = this.models[2].Meshes[0];
+                // R: get the model's effect
+                Effect effect2 = mesh2.Effects[0];
+                // R: set the technique
+                effect2.CurrentTechnique = effect2.Techniques["RenderScene"];
+                camera.SetEffectParameters(effect2);
+
+                // clear the backbuffer, including the stencil
+                GraphicsDevice.Clear(ClearOptions.Target | ClearOptions.DepthBuffer | ClearOptions.Stencil, Color.CornflowerBlue, 1.0f, 0);
+
+                // render the mirrorquad to the stencil buffer
+                GraphicsDevice.DepthStencilState = addIfMirror;
+                this.mirrorEffect.CurrentTechnique.Passes[0].Apply();
+                this.GraphicsDevice.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, this.mirrorQuad, 0, this.mirrorQuad.Length, this.quadIndices, 0, this.quadIndices.Length / 3);
+
+                // mirror the camera position, camera look direction, and world
+                // camera-position
+                Vector3 cameraPositionMirrored = cameraPosition;
+                cameraPositionMirrored.Z = (-1 * cameraPosition.Z) + mirrorPosition.Z*2;
+                // origin
+                Vector3 originMirrored = new Vector3(0, 0, mirrorPosition.Z * 2);
+                camera = new Camera(cameraPositionMirrored, originMirrored, new Vector3(0, 1, 0));
+                // world
+                Matrix reflection = Matrix.CreateScale(new Vector3(-1, 1, 1));
+                // R: create the world matrix for the model
+                Matrix reflectedWorld3 = Matrix.CreateScale(150f) * Matrix.CreateTranslation(100 * (displayNumber - 3), -12, 0) * Matrix.CreateRotationY(angle) * reflection;
+                
+                // reset the depth buffer
+                GraphicsDevice.Clear(ClearOptions.DepthBuffer, Color.CornflowerBlue, 1.0f, 0);
+
+                // render the scene to the backbuffer where the stencilbuffer == 1, i.e. in the mirrorQuad
+                GraphicsDevice.DepthStencilState = checkMirror;
+                camera.SetEffectParameters(effect2);
+                effect2.Parameters["World"].SetValue(reflectedWorld3);
+                mesh2.Draw();
+
+                // undo mirroring of camera and world
+                camera = new Camera(cameraPosition, new Vector3(0, 0, 0), new Vector3(0, 1, 0));
+                // R: recreate the normal world matrix for the model
+                Matrix World3 = Matrix.CreateScale(150f) * Matrix.CreateTranslation(100 * (displayNumber - 3), -12, 0) * Matrix.CreateRotationY(angle);
+                camera.SetEffectParameters(effect2);
+                effect2.Parameters["World"].SetValue(World3);
+
+                // render the scene to the backbuffer normally
+                GraphicsDevice.DepthStencilState = DepthStencilState.Default;
+                GraphicsDevice.Clear(ClearOptions.Stencil | ClearOptions.DepthBuffer, Color.CornflowerBlue, 1.0f, 0);
+                mesh2.Draw();
             }
 
             base.Draw(gameTime);
@@ -430,5 +531,46 @@ namespace GraphicsPractical3
             }
             return values;
         }
+
+        // This function sets up the mirrorQuad in de XY-plane
+        private void setupMirror()
+        {
+            // Normal points along the z-axis
+            Vector3 quadNormal = new Vector3(0, 0, 1);
+
+            this.mirrorQuad = new VertexPositionNormalTexture[4];
+            // Top left
+            this.mirrorQuad[0].Position = new Vector3(0, 1, 0);
+            this.mirrorQuad[0].Normal = quadNormal;
+            this.mirrorQuad[0].TextureCoordinate = new Vector2(0, 0);
+            // Top right
+            this.mirrorQuad[1].Position = new Vector3(1, 1, 0);
+            this.mirrorQuad[1].Normal = quadNormal;
+            this.mirrorQuad[1].TextureCoordinate = new Vector2(1, 0);
+            // Bottom left
+            this.mirrorQuad[2].Position = new Vector3(0, 0, 0);
+            this.mirrorQuad[2].Normal = quadNormal;
+            this.mirrorQuad[2].TextureCoordinate = new Vector2(0, 1);
+            // Bottom right
+            this.mirrorQuad[3].Position = new Vector3(1, 0, 0);
+            this.mirrorQuad[3].Normal = quadNormal;
+            this.mirrorQuad[3].TextureCoordinate = new Vector2(1, 1);
+        }
+
+        // stencil buffers used to create a correct mirror scene
+        // code from iloveshaders.blogspot.nl/2011/05/using-stencil-buffer-rendering-stencil.html
+        DepthStencilState addIfMirror = new DepthStencilState()
+        {
+            StencilEnable = true,
+            StencilFunction = CompareFunction.Always,
+            StencilPass = StencilOperation.Increment
+        };
+        DepthStencilState checkMirror = new DepthStencilState()
+        {
+            StencilEnable = true,
+            StencilFunction = CompareFunction.Equal,
+            ReferenceStencil = 1,
+            StencilPass = StencilOperation.Keep
+        };
     }
 }

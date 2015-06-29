@@ -4,4 +4,5 @@ Content\Models\bunny.xnb
 Content\Models\femalehead.xnb
 Content\Effects\Effect2.xnb
 Content\Models\bunny2.xnb
+Content\Effects\Effect2_blur.xnb
 Content\Effects\Effect3.xnb

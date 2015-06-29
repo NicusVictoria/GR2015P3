@@ -73,6 +73,13 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Effects\Effect2_blur.fx">
+      <Name>Effect2_blur</Name>
+      <Importer>EffectImporter</Importer>
+      <Processor>EffectProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="Effects\Effect3.fx">
       <Name>Effect3</Name>
       <Importer>EffectImporter</Importer>

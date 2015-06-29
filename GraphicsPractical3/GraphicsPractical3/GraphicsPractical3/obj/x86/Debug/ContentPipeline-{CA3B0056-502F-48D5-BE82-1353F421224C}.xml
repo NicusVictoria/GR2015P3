@@ -89,13 +89,22 @@
       <Time>2015-06-28T11:31:44.2888853+02:00</Time>
     </Item>
     <Item>
+      <Source>Effects\Effect2_blur.fx</Source>
+      <Name>Effects\Effect2_blur</Name>
+      <Importer>EffectImporter</Importer>
+      <Processor>EffectProcessor</Processor>
+      <Options>None</Options>
+      <Output>D:\Study\Graphics\GR2015P3\GR2015P3\GraphicsPractical3\GraphicsPractical3\GraphicsPractical3\bin\x86\Debug\Content\Effects\Effect2_blur.xnb</Output>
+      <Time>2015-06-28T17:11:02.9596356+02:00</Time>
+    </Item>
+    <Item>
       <Source>Effects\Effect3.fx</Source>
       <Name>Effects\Effect3</Name>
       <Importer>EffectImporter</Importer>
       <Processor>EffectProcessor</Processor>
       <Options>None</Options>
       <Output>D:\Study\Graphics\GR2015P3\GR2015P3\GraphicsPractical3\GraphicsPractical3\GraphicsPractical3\bin\x86\Debug\Content\Effects\Effect3.xnb</Output>
-      <Time>2015-06-28T13:58:28.0046391+02:00</Time>
+      <Time>2015-06-29T21:52:08.3712612+02:00</Time>
     </Item>
     <BuildSuccessful>true</BuildSuccessful>
     <Settings>

@@ -10,4 +10,5 @@ D:\Study\Graphics\GR2015P3\GR2015P3\GraphicsPractical3\GraphicsPractical3\Graphi
 D:\Study\Graphics\GR2015P3\GR2015P3\GraphicsPractical3\GraphicsPractical3\GraphicsPractical3\obj\x86\Debug\GraphicsPractical3.pdb
 D:\Study\Graphics\GR2015P3\GR2015P3\GraphicsPractical3\GraphicsPractical3\GraphicsPractical3\bin\x86\Debug\Content\Effects\Effect2.xnb
 D:\Study\Graphics\GR2015P3\GR2015P3\GraphicsPractical3\GraphicsPractical3\GraphicsPractical3\bin\x86\Debug\Content\Models\bunny2.xnb
+D:\Study\Graphics\GR2015P3\GR2015P3\GraphicsPractical3\GraphicsPractical3\GraphicsPractical3\bin\x86\Debug\Content\Effects\Effect2_blur.xnb
 D:\Study\Graphics\GR2015P3\GR2015P3\GraphicsPractical3\GraphicsPractical3\GraphicsPractical3\bin\x86\Debug\Content\Effects\Effect3.xnb
