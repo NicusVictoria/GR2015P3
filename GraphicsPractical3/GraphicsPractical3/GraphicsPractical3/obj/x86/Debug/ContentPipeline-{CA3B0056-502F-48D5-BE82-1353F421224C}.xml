@@ -7,8 +7,8 @@
       <Importer>EffectImporter</Importer>
       <Processor>EffectProcessor</Processor>
       <Options>None</Options>
-      <Output>D:\Study\Graphics\GR2015P3\GR2015P3\GraphicsPractical3\GraphicsPractical3\GraphicsPractical3\bin\x86\Debug\Content\Effects\Effect1.xnb</Output>
-      <Time>2015-06-16T11:31:13.5640552+02:00</Time>
+      <Output>C:\Users\Nicus\Documents\GitHub\GR2015P3\GraphicsPractical3\GraphicsPractical3\GraphicsPractical3\bin\x86\Debug\Content\Effects\Effect1.xnb</Output>
+      <Time>2015-06-16T11:51:04.2215804+02:00</Time>
     </Item>
     <Item>
       <Source>Effects\Effect0.fx</Source>
@@ -16,8 +16,26 @@
       <Importer>EffectImporter</Importer>
       <Processor>EffectProcessor</Processor>
       <Options>None</Options>
-      <Output>D:\Study\Graphics\GR2015P3\GR2015P3\GraphicsPractical3\GraphicsPractical3\GraphicsPractical3\bin\x86\Debug\Content\Effects\Effect0.xnb</Output>
-      <Time>2015-06-28T11:31:44.2345498+02:00</Time>
+      <Output>C:\Users\Nicus\Documents\GitHub\GR2015P3\GraphicsPractical3\GraphicsPractical3\GraphicsPractical3\bin\x86\Debug\Content\Effects\Effect0.xnb</Output>
+      <Time>2015-06-28T23:02:00.9012992+02:00</Time>
+    </Item>
+    <Item>
+      <Source>Effects\Effect2.fx</Source>
+      <Name>Effects\Effect2</Name>
+      <Importer>EffectImporter</Importer>
+      <Processor>EffectProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Nicus\Documents\GitHub\GR2015P3\GraphicsPractical3\GraphicsPractical3\GraphicsPractical3\bin\x86\Debug\Content\Effects\Effect2.xnb</Output>
+      <Time>2015-06-28T23:02:00.9043012+02:00</Time>
+    </Item>
+    <Item>
+      <Source>Effects\Effect3.fx</Source>
+      <Name>Effects\Effect3</Name>
+      <Importer>EffectImporter</Importer>
+      <Processor>EffectProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Nicus\Documents\GitHub\GR2015P3\GraphicsPractical3\GraphicsPractical3\GraphicsPractical3\bin\x86\Debug\Content\Effects\Effect3.xnb</Output>
+      <Time>2015-06-28T23:02:00.9073032+02:00</Time>
     </Item>
     <Item>
       <Source>Models\bunny.fbx</Source>
@@ -25,11 +43,11 @@
       <Importer>FbxImporter</Importer>
       <Processor>ModelProcessor</Processor>
       <Options>None</Options>
-      <Output>D:\Study\Graphics\GR2015P3\GR2015P3\GraphicsPractical3\GraphicsPractical3\GraphicsPractical3\bin\x86\Debug\Content\Models\bunny.xnb</Output>
-      <Time>2015-06-16T11:13:46.8049772+02:00</Time>
+      <Output>C:\Users\Nicus\Documents\GitHub\GR2015P3\GraphicsPractical3\GraphicsPractical3\GraphicsPractical3\bin\x86\Debug\Content\Models\bunny.xnb</Output>
+      <Time>2015-06-16T11:51:04.2596699+02:00</Time>
       <Dependency>
-        <Key>D:\Study\Graphics\GR2015P3\GR2015P3\GraphicsPractical3\GraphicsPractical3\GraphicsPractical3\obj\x86\Debug\Models\bunny_0.xml</Key>
-        <Value>2015-06-16T19:59:27.4605273+02:00</Value>
+        <Key>C:\Users\Nicus\Documents\GitHub\GR2015P3\GraphicsPractical3\GraphicsPractical3\GraphicsPractical3\obj\x86\Debug\Models\bunny_0.xml</Key>
+        <Value>2015-06-28T23:02:59.0889677+02:00</Value>
       </Dependency>
     </Item>
     <Item>
@@ -38,35 +56,12 @@
       <Importer>FbxImporter</Importer>
       <Processor>ModelProcessor</Processor>
       <Options>None</Options>
-      <Output>D:\Study\Graphics\GR2015P3\GR2015P3\GraphicsPractical3\GraphicsPractical3\GraphicsPractical3\bin\x86\Debug\Content\Models\femalehead.xnb</Output>
-      <Time>2015-06-16T11:13:54.3538531+02:00</Time>
+      <Output>C:\Users\Nicus\Documents\GitHub\GR2015P3\GraphicsPractical3\GraphicsPractical3\GraphicsPractical3\bin\x86\Debug\Content\Models\femalehead.xnb</Output>
+      <Time>2015-06-16T11:51:04.2736792+02:00</Time>
       <Dependency>
-        <Key>D:\Study\Graphics\GR2015P3\GR2015P3\GraphicsPractical3\GraphicsPractical3\GraphicsPractical3\obj\x86\Debug\Models\femalehead_0.xml</Key>
-        <Value>2015-06-16T19:59:27.7505871+02:00</Value>
+        <Key>C:\Users\Nicus\Documents\GitHub\GR2015P3\GraphicsPractical3\GraphicsPractical3\GraphicsPractical3\obj\x86\Debug\Models\femalehead_0.xml</Key>
+        <Value>2015-06-28T23:02:59.4652882+02:00</Value>
       </Dependency>
-    </Item>
-    <Item>
-      <Source>Models\bunny.fbx</Source>
-      <Importer>FbxImporter</Importer>
-      <Options>IntermediateFile, DontCacheImportedData</Options>
-      <Output>D:\Study\Graphics\GR2015P3\GR2015P3\GraphicsPractical3\GraphicsPractical3\GraphicsPractical3\obj\x86\Debug\Models\bunny_0.xml</Output>
-      <Time>2015-06-16T11:13:46.8049772+02:00</Time>
-    </Item>
-    <Item>
-      <Source>Models\femalehead.fbx</Source>
-      <Importer>FbxImporter</Importer>
-      <Options>IntermediateFile, DontCacheImportedData</Options>
-      <Output>D:\Study\Graphics\GR2015P3\GR2015P3\GraphicsPractical3\GraphicsPractical3\GraphicsPractical3\obj\x86\Debug\Models\femalehead_0.xml</Output>
-      <Time>2015-06-16T11:13:54.3538531+02:00</Time>
-    </Item>
-    <Item>
-      <Source>Effects\Effect2.fx</Source>
-      <Name>Effects\Effect2</Name>
-      <Importer>EffectImporter</Importer>
-      <Processor>EffectProcessor</Processor>
-      <Options>None</Options>
-      <Output>D:\Study\Graphics\GR2015P3\GR2015P3\GraphicsPractical3\GraphicsPractical3\GraphicsPractical3\bin\x86\Debug\Content\Effects\Effect2.xnb</Output>
-      <Time>2015-06-28T11:31:44.2381805+02:00</Time>
     </Item>
     <Item>
       <Source>Models\bunny2.fbx</Source>
@@ -74,28 +69,51 @@
       <Importer>FbxImporter</Importer>
       <Processor>ModelProcessor</Processor>
       <Options>None</Options>
-      <Output>D:\Study\Graphics\GR2015P3\GR2015P3\GraphicsPractical3\GraphicsPractical3\GraphicsPractical3\bin\x86\Debug\Content\Models\bunny2.xnb</Output>
-      <Time>2015-06-28T11:31:44.2888853+02:00</Time>
+      <Output>C:\Users\Nicus\Documents\GitHub\GR2015P3\GraphicsPractical3\GraphicsPractical3\GraphicsPractical3\bin\x86\Debug\Content\Models\bunny2.xnb</Output>
+      <Time>2015-06-28T23:02:00.9404052+02:00</Time>
       <Dependency>
-        <Key>D:\Study\Graphics\GR2015P3\GR2015P3\GraphicsPractical3\GraphicsPractical3\GraphicsPractical3\obj\x86\Debug\Models\bunny2_0.xml</Key>
-        <Value>2015-06-28T11:32:03.8217199+02:00</Value>
+        <Key>C:\Users\Nicus\Documents\GitHub\GR2015P3\GraphicsPractical3\GraphicsPractical3\GraphicsPractical3\obj\x86\Debug\Models\bunny2_0.xml</Key>
+        <Value>2015-06-28T23:02:59.548347+02:00</Value>
       </Dependency>
+    </Item>
+    <Item>
+      <Source>Models\bunny.fbx</Source>
+      <Importer>FbxImporter</Importer>
+      <Options>IntermediateFile, DontCacheImportedData</Options>
+      <Output>C:\Users\Nicus\Documents\GitHub\GR2015P3\GraphicsPractical3\GraphicsPractical3\GraphicsPractical3\obj\x86\Debug\Models\bunny_0.xml</Output>
+      <Time>2015-06-16T11:51:04.2596699+02:00</Time>
+    </Item>
+    <Item>
+      <Source>Models\femalehead.fbx</Source>
+      <Importer>FbxImporter</Importer>
+      <Options>IntermediateFile, DontCacheImportedData</Options>
+      <Output>C:\Users\Nicus\Documents\GitHub\GR2015P3\GraphicsPractical3\GraphicsPractical3\GraphicsPractical3\obj\x86\Debug\Models\femalehead_0.xml</Output>
+      <Time>2015-06-16T11:51:04.2736792+02:00</Time>
     </Item>
     <Item>
       <Source>Models\bunny2.fbx</Source>
       <Importer>FbxImporter</Importer>
       <Options>IntermediateFile, DontCacheImportedData</Options>
-      <Output>D:\Study\Graphics\GR2015P3\GR2015P3\GraphicsPractical3\GraphicsPractical3\GraphicsPractical3\obj\x86\Debug\Models\bunny2_0.xml</Output>
-      <Time>2015-06-28T11:31:44.2888853+02:00</Time>
+      <Output>C:\Users\Nicus\Documents\GitHub\GR2015P3\GraphicsPractical3\GraphicsPractical3\GraphicsPractical3\obj\x86\Debug\Models\bunny2_0.xml</Output>
+      <Time>2015-06-28T23:02:00.9404052+02:00</Time>
     </Item>
     <Item>
-      <Source>Effects\Effect3.fx</Source>
-      <Name>Effects\Effect3</Name>
+      <Source>Textures\queen.png</Source>
+      <Name>Textures\queen</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Nicus\Documents\GitHub\GR2015P3\GraphicsPractical3\GraphicsPractical3\GraphicsPractical3\bin\x86\Debug\Content\Textures\queen.xnb</Output>
+      <Time>2015-06-29T10:45:08.2155261+02:00</Time>
+    </Item>
+    <Item>
+      <Source>Effects\QueenEffect.fx</Source>
+      <Name>Effects\QueenEffect</Name>
       <Importer>EffectImporter</Importer>
       <Processor>EffectProcessor</Processor>
       <Options>None</Options>
-      <Output>D:\Study\Graphics\GR2015P3\GR2015P3\GraphicsPractical3\GraphicsPractical3\GraphicsPractical3\bin\x86\Debug\Content\Effects\Effect3.xnb</Output>
-      <Time>2015-06-28T13:58:28.0046391+02:00</Time>
+      <Output>C:\Users\Nicus\Documents\GitHub\GR2015P3\GraphicsPractical3\GraphicsPractical3\GraphicsPractical3\bin\x86\Debug\Content\Effects\QueenEffect.xnb</Output>
+      <Time>2015-06-29T22:45:17.2401843+02:00</Time>
     </Item>
     <BuildSuccessful>true</BuildSuccessful>
     <Settings>
@@ -104,10 +122,10 @@
       <TargetProfile>HiDef</TargetProfile>
       <BuildConfiguration>Debug</BuildConfiguration>
       <CompressContent>false</CompressContent>
-      <RootDirectory>D:\Study\Graphics\GR2015P3\GR2015P3\GraphicsPractical3\GraphicsPractical3\GraphicsPractical3Content\</RootDirectory>
-      <LoggerRootDirectory>D:\Study\Graphics\GR2015P3\GR2015P3\GraphicsPractical3\GraphicsPractical3\GraphicsPractical3\</LoggerRootDirectory>
-      <IntermediateDirectory>D:\Study\Graphics\GR2015P3\GR2015P3\GraphicsPractical3\GraphicsPractical3\GraphicsPractical3\obj\x86\Debug\</IntermediateDirectory>
-      <OutputDirectory>D:\Study\Graphics\GR2015P3\GR2015P3\GraphicsPractical3\GraphicsPractical3\GraphicsPractical3\bin\x86\Debug\Content\</OutputDirectory>
+      <RootDirectory>C:\Users\Nicus\Documents\GitHub\GR2015P3\GraphicsPractical3\GraphicsPractical3\GraphicsPractical3Content\</RootDirectory>
+      <LoggerRootDirectory>C:\Users\Nicus\Documents\GitHub\GR2015P3\GraphicsPractical3\GraphicsPractical3\GraphicsPractical3\</LoggerRootDirectory>
+      <IntermediateDirectory>C:\Users\Nicus\Documents\GitHub\GR2015P3\GraphicsPractical3\GraphicsPractical3\GraphicsPractical3\obj\x86\Debug\</IntermediateDirectory>
+      <OutputDirectory>C:\Users\Nicus\Documents\GitHub\GR2015P3\GraphicsPractical3\GraphicsPractical3\GraphicsPractical3\bin\x86\Debug\Content\</OutputDirectory>
     </Settings>
     <Assemblies>
       <Assembly>
@@ -136,7 +154,7 @@
       </Assembly>
       <Assembly>
         <Key>C:\Windows\Microsoft.Net\assembly\GAC_32\Microsoft.Xna.Framework.Content.Pipeline\v4.0_4.0.0.0__842cf8be1de50553\Microsoft.Xna.Framework.Content.Pipeline.dll</Key>
-        <Value>2015-04-30T11:31:21.4035786+02:00</Value>
+        <Value>2015-04-30T12:07:48.7838779+02:00</Value>
       </Assembly>
     </Assemblies>
   </Asset>

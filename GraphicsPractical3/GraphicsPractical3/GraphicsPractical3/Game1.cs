@@ -39,6 +39,11 @@ namespace GraphicsPractical3
         private RenderTarget2D renderTargetOriginal;
         private RenderTarget2D renderTargeHorizontalBlur;
 
+        // N: Grayscale Picture of QueenQuad :)
+        private VertexPositionNormalTexture[] QueenQuadVertices;
+        private short[] QueenQuadIndices;
+        private Matrix QueenQuadTransform;
+        Effect QueenQuadEffect;
 
         private Effect effect3;
         private VertexPositionNormalTexture[] quadVertices;
@@ -181,7 +186,49 @@ namespace GraphicsPractical3
             gaussianDistribution = this.normalize(gaussianDistribution);
             // R: pass the 1D kernel to the effect
             effect3.Parameters["BlurKernel"].SetValue(gaussianDistribution);
+            // Setup the quad
+            this.setupQuad();
+
+            // N: load "QueenQuadEffect" effect for the quad
+            QueenQuadEffect = this.Content.Load<Effect>("Effects/QueenEffect");
+            // N: load the texture to the QueenQuadEffect
+            QueenQuadEffect.Parameters["QueenTexture"].SetValue(Content.Load<Texture>("Textures/queen"));
+            // N: Setup the QueenQuad
+            setupQueenQuad();
         }
+
+        /// <summary>
+        /// Sets up a 2 by 2 quad around the origin.
+        /// </summary>
+        private void setupQueenQuad()
+        {
+            float scale = 50.0f;
+
+            // Normal points up
+            Vector3 QueenQuadNormal = new Vector3(0, 0, 1);
+
+            this.QueenQuadVertices = new VertexPositionNormalTexture[4];
+            // Top left
+            this.QueenQuadVertices[0].Position = new Vector3(-0.5f, 0.3f, 0);
+            this.QueenQuadVertices[0].Normal = QueenQuadNormal;
+            this.QueenQuadVertices[0].TextureCoordinate = new Vector2(0, 0);
+            // Top right
+            this.QueenQuadVertices[1].Position = new Vector3(0.5f, 0.3f, 0);
+            this.QueenQuadVertices[1].Normal = QueenQuadNormal;
+            this.QueenQuadVertices[1].TextureCoordinate = new Vector2(1, 0);
+            // Bottom left
+            this.QueenQuadVertices[2].Position = new Vector3(-0.5f, -0.3f, 0);
+            this.QueenQuadVertices[2].Normal = QueenQuadNormal;
+            this.QueenQuadVertices[2].TextureCoordinate = new Vector2(0, 1);
+            // Bottom right
+            this.QueenQuadVertices[3].Position = new Vector3(0.5f, -0.3f, 0);
+            this.QueenQuadVertices[3].Normal = QueenQuadNormal;
+            this.QueenQuadVertices[3].TextureCoordinate = new Vector2(1, 1);
+
+            this.QueenQuadIndices = new short[] { 0, 1, 2, 1, 2, 3 };
+            this.QueenQuadTransform = Matrix.CreateScale(scale);
+        }
+
 
         /// <summary>
         /// UnloadContent will be called once per game and is the place to unload
@@ -265,6 +312,21 @@ namespace GraphicsPractical3
                 effect2.Parameters["InverseTransposeWorld"].SetValue(Matrix.Transpose(Matrix.Invert(World2)));
             }
 
+            if(displayNumber == 3)
+            {
+                // N: Get the model's only effect
+                Effect QueenEffect = this.models[2].Meshes[0].Effects[0];
+
+                // Matrices for 3D perspective projection
+                this.camera.SetEffectParameters(QueenEffect);
+
+                // R: create the world matrix for the model
+                Matrix World3 = Matrix.CreateScale(150f) * Matrix.CreateTranslation(100 * (displayNumber - 2), -12, 0) * Matrix.CreateRotationY(angle);
+
+                // R: set the world matrix to the effect
+                QueenEffect.Parameters["World"].SetValue(World3);
+                QueenEffect.Parameters["InverseTransposeWorld"].SetValue(Matrix.Transpose(Matrix.Invert(World3)));
+            }
 
             base.Update(gameTime);
         }
@@ -382,7 +444,34 @@ namespace GraphicsPractical3
                 this.camera.Eye = new Vector3(0, 50, 100);
             }
 
+            if(displayNumber == 3)
+            {
+                // Clear the screen in a predetermined color and clear the depth buffer
+                this.GraphicsDevice.Clear(ClearOptions.Target | ClearOptions.DepthBuffer, Color.DeepSkyBlue, 1.0f, 0);
+
+                // added: set the technique of the picture
+                this.QueenQuadEffect.CurrentTechnique = QueenQuadEffect.Techniques["Technique1"];
+                // Matrices for 3D perspective projection
+                new Camera(new Vector3(0,0,100), new Vector3(0,0,0), new Vector3(0,1,0)).SetEffectParameters(QueenQuadEffect);
+                this.QueenQuadEffect.Parameters["World"].SetValue(Matrix.CreateScale(100.0f));
+
+                // added: draw the Picture
+                this.DrawQueenQuad();
+            }
+
             base.Draw(gameTime);
+        }
+
+        protected void DrawQueenQuad()
+        {
+            // added: apply effect passes
+            foreach (EffectPass pass in this.QueenQuadEffect.CurrentTechnique.Passes)
+            {
+                pass.Apply();
+            }
+
+            // added: draw the picture using the QueenQuadEffect
+            this.GraphicsDevice.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, this.QueenQuadVertices, 0, this.QueenQuadVertices.Length, this.QueenQuadIndices, 0, this.QueenQuadIndices.Length / 3);
         }
 
         // set up the projection quad used for blurring

@@ -3,7 +3,7 @@
   <Asset Type="Graphics:NodeContent">
     <Name>bunny_root</Name>
     <Identity>
-      <SourceFilename>D:\Study\Graphics\GR2015P3\GR2015P3\GraphicsPractical3\GraphicsPractical3\GraphicsPractical3Content\Models\bunny2.fbx</SourceFilename>
+      <SourceFilename>C:\Users\Nicus\Documents\GitHub\GR2015P3\GraphicsPractical3\GraphicsPractical3\GraphicsPractical3Content\Models\bunny2.fbx</SourceFilename>
       <SourceTool>FbxImporter</SourceTool>
     </Identity>
     <Transform>1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</Transform>
@@ -31,7 +31,7 @@
     <Resource ID="#Resource1" Type="Graphics:BasicMaterialContent">
       <Name>defaultMat</Name>
       <Identity>
-        <SourceFilename>D:\Study\Graphics\GR2015P3\GR2015P3\GraphicsPractical3\GraphicsPractical3\GraphicsPractical3Content\Models\bunny2.fbx</SourceFilename>
+        <SourceFilename>C:\Users\Nicus\Documents\GitHub\GR2015P3\GraphicsPractical3\GraphicsPractical3\GraphicsPractical3Content\Models\bunny2.fbx</SourceFilename>
         <SourceTool>FbxImporter</SourceTool>
       </Identity>
       <OpaqueData>
