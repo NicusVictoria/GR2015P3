@@ -18,26 +18,27 @@ namespace GraphicsPractical3
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        SpriteFont font;
         private FrameRateCounter frameRateCounter;
 
         // Game objects and variables
-        // R: the camera object
+        // the camera object
         private Camera camera;
-        // R: the initial Camera position
+        // the initial Camera position
         private Vector3 cameraPosition;
-        // R: the angle to rotate the world with
+        // the angle to rotate the world with
         private float angle;
 
-        // R: Models
+        // Models
         private Model[] models;
 
-        // R: model to display
+        // model to display
         private int displayNumber;
-        // R: flag that ensures only one switch per keypress
+        // flag that ensures only one switch per keypress
         private bool wasReleased;
 
         // E5
-        // N: Grayscale Picture of QueenQuad :)
+        // Grayscale Picture of QueenQuad :)
         private VertexPositionNormalTexture[] QueenQuadVertices;
         private short[] QueenQuadIndices;
         private Matrix QueenQuadTransform;
@@ -45,7 +46,7 @@ namespace GraphicsPractical3
 
 
         // E6
-        // R: render targets for blurring
+        // render targets for blurring
         private RenderTarget2D renderTargetOriginal;
         private RenderTarget2D renderTargeHorizontalBlur;
 
@@ -55,7 +56,7 @@ namespace GraphicsPractical3
         private VertexPositionNormalTexture[] quadVertices;
         private short[] quadIndices;
 
-        // R: filter used for the Gaussian blur
+        // filter used for the Gaussian blur
         float[] gaussianDistribution;
 
 
@@ -68,7 +69,7 @@ namespace GraphicsPractical3
         float mirrorScale;
         Vector3 mirrorPosition;
         
-        // R: constructor for the game1 class
+        // constructor for the game1 class
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -89,7 +90,7 @@ namespace GraphicsPractical3
         {
             // Copy over the device's rasterizer state to change the current fillMode
             this.GraphicsDevice.RasterizerState = new RasterizerState() { CullMode = CullMode.None };
-            // R: Turn on the Depth stencil
+            // Turn on the Depth stencil
             this.graphics.PreferredDepthStencilFormat = DepthFormat.Depth24Stencil8;
             // Set up the window
             this.graphics.PreferredBackBufferWidth = 800;
@@ -103,15 +104,15 @@ namespace GraphicsPractical3
             // Initialize the camera
             cameraPosition = new Vector3(0, 50, 100);
             this.camera = new Camera(cameraPosition, new Vector3(0, 0, 0), new Vector3(0, 1, 0));
-            // R: initialize the view angle
+            // initialize the view angle
             angle = 0.0f;
 
             this.IsMouseVisible = true;
 
-            // R: initialize displayNumber
+            // initialize displayNumber
             displayNumber = 0;
             bool wasReleased = true;
-            // R: initialize model array and scale array (due to the different sizes of models)
+            // initialize model array and scale array (due to the different sizes of models)
             models = new Model[5];
 
             base.Initialize();
@@ -125,6 +126,8 @@ namespace GraphicsPractical3
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            // load the font
+            font = Content.Load<SpriteFont>("Fonts/SpriteFont");
 
             // Set up render targets for blurring
             PresentationParameters pp = GraphicsDevice.PresentationParameters;
@@ -134,15 +137,15 @@ namespace GraphicsPractical3
             // Here all content is loaded for all scenes
 
             // E1
-            // R: model E1
+            // model E1
             Effect effectE1 = this.Content.Load<Effect>("Effects/EffectE1");
             this.models[0] = this.Content.Load<Model>("Models/bunny");
             this.models[0].Meshes[0].MeshParts[0].Effect = effectE1;
 
-            // R: Set the effect parameters for scene E1
+            // Set the effect parameters for scene E1
             effectE1.CurrentTechnique = effectE1.Techniques["Technique1"];
 
-            // R: Set the lights
+            // Set the lights
             Vector4[] lightPositions = new Vector4[5];
             lightPositions[0] = new Vector4(50.0f, 50.0f, 50.0f, 0.0f);
             lightPositions[1] = new Vector4(-50.0f, 50.0f, 50.0f, 0.0f);
@@ -161,10 +164,10 @@ namespace GraphicsPractical3
 
 
             // E3
-            Effect effectE3 = this.Content.Load<Effect>("Effects/CellShader");
+            Effect effectE3 = this.Content.Load<Effect>("Effects/EffectE3");
             this.models[1] = this.Content.Load<Model>("Models/femalehead");
             this.models[1].Meshes[0].MeshParts[0].Effect = effectE3;
-            // R: Set the effect parameters
+            // Set the effect parameters
             effectE3.CurrentTechnique = effectE3.Techniques["Technique1"];
             // Matrices for 3D perspective projection
             this.camera.SetEffectParameters(effectE3);
@@ -172,7 +175,7 @@ namespace GraphicsPractical3
 
             // E5
             // load "QueenQuadEffect" effect for the quad
-            QueenQuadEffect = this.Content.Load<Effect>("Effects/QueenEffect");
+            QueenQuadEffect = this.Content.Load<Effect>("Effects/EffectE5");
             // set the technique of effect
             this.QueenQuadEffect.CurrentTechnique = QueenQuadEffect.Techniques["Technique1"];
 
@@ -187,12 +190,12 @@ namespace GraphicsPractical3
 
 
             // E6
-            // R: load the model and effect for the scene
+            // load the model and effect for the scene
             Effect effectE6 = this.Content.Load<Effect>("Effects/EffectE6M3");
             this.models[2] = this.Content.Load<Model>("Models/bunny2");
             this.models[2].Meshes[0].MeshParts[0].Effect = effectE6;
 
-            // R: set the light
+            // set the light
             lightPositions = new Vector4[1];
             lightPositions[0] = new Vector4(50.0f, 50.0f, 50.0f, 0.0f);
             effectE6.Parameters["LightPositions"].SetValue(lightPositions);
@@ -206,7 +209,7 @@ namespace GraphicsPractical3
 
             this.setupQuad();
 
-            // R: set the gaussian distribution
+            // set the gaussian distribution
             // Calculated from http://dev.theomader.com/gaussian-kernel-calculator/, with sigma = 0.785 and size = 7
             // This best approximates the kernel from https://en.wikipedia.org/wiki/Gaussian_blur
             gaussianDistribution = new float[7] 
@@ -221,7 +224,7 @@ namespace GraphicsPractical3
             };
             // Normalize the distribution
             gaussianDistribution = this.normalize(gaussianDistribution);
-            // R: pass the 1D kernel to the effect
+            // pass the 1D kernel to the effect
             effectE6Blur.Parameters["BlurKernel"].SetValue(gaussianDistribution);
 
             // M3
@@ -230,7 +233,7 @@ namespace GraphicsPractical3
             mirrorEffect = this.Content.Load<Effect>("Effects/EffectM3Mirror");
             mirrorEffect.CurrentTechnique = mirrorEffect.Techniques["Technique1"];
             mirrorScale = 35.0f;
-            // R: define the position of the mirror
+            // define the position of the mirror
             mirrorPosition = new Vector3(-0.5f * mirrorScale, 0, -40.0f);
             this.setupMirror();
         }
@@ -251,14 +254,14 @@ namespace GraphicsPractical3
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            // R: read and process keyboard input
+            // read and process keyboard input
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
 
-            // added: Get keyboard state
+            // Get keyboard state
             KeyboardState kbState = Keyboard.GetState();
-            // added: switch views at the press of spacebar
+            // switch views at the press of spacebar
             if (wasReleased && kbState.IsKeyDown(Keys.Space))
             {
                 this.displayNumber = (displayNumber + 1) % models.Length;
@@ -269,33 +272,33 @@ namespace GraphicsPractical3
             {
                 wasReleased = true;
             }
-            // R: exit the game when the escape key is hit
+            // exit the game when the escape key is hit
             if (kbState.IsKeyDown(Keys.Escape))
             {
                 this.Exit();
             }
             
-            // R: rotate: update the viewing angle
+            // rotate: update the viewing angle
             float timeStep = (float)gameTime.ElapsedGameTime.TotalSeconds;
             this.angle += timeStep * 1.0f; // this last one is the rotation speed
 
             // Update the window title
             this.Window.Title = "XNA Renderer | FPS: " + this.frameRateCounter.FrameRate;
 
-            // R: update the scenes
-            // R: update scene E1
+            // update the scenes
+            // update scene E1
             if (displayNumber == 0)
             {
-                // R: Get the model's only effect
+                // Get the model's only effect
                 Effect effectE1 = this.models[0].Meshes[0].Effects[0];
 
                 // Matrices for 3D perspective projection
                 this.camera.SetEffectParameters(effectE1);
 
-                // R: create the world matrix for the model
+                // create the world matrix for the model
                 Matrix World = Matrix.CreateScale(150f) * Matrix.CreateTranslation(0, -12, 0) * Matrix.CreateRotationY(angle);
 
-                // R: set the world matrix to the effect
+                // set the world matrix to the effect
                 effectE1.Parameters["World"].SetValue(World);
                 effectE1.Parameters["InverseTransposeWorld"].SetValue(Matrix.Transpose(Matrix.Invert(World)));
             }
@@ -305,55 +308,55 @@ namespace GraphicsPractical3
             if (displayNumber == 1)
             {
 
-                // R: create the world matrix for the model
+                // create the world matrix for the model
                 Matrix World = Matrix.CreateScale(1.5f) * Matrix.CreateTranslation(0, 0, 0) * Matrix.CreateRotationY(angle);
 
                 // get the meshes effect
                 Effect effectE3 = this.models[1].Meshes[0].Effects[0];
-                // R: set the world matrix to the effect
+                // set the world matrix to the effect
                 effectE3.Parameters["DiffuseColor"].SetValue(new Vector4(1f, 1f, 0.0f, 1.0f));
                 effectE3.Parameters["World"].SetValue(World);
                 effectE3.Parameters["InverseTransposeWorld"].SetValue(Matrix.Transpose(Matrix.Invert(World)));
             }
 
 
-            // R: update scene E6
+            // update scene E6
             if (displayNumber == 3)
             {
-                // R: Get the model's only effect
+                // Get the model's only effect
                 Effect effectE6 = this.models[2].Meshes[0].Effects[0];
 
                 // Matrices for 3D perspective projection
                 this.camera.SetEffectParameters(effectE6);
 
-                // R: create the world matrix for the model
+                // create the world matrix for the model
                 Matrix World = Matrix.CreateScale(150f) * Matrix.CreateTranslation(0, -12, 0) * Matrix.CreateRotationY(angle);
 
-                // R: set the world matrix to the effect
+                // set the world matrix to the effect
                 effectE6.Parameters["World"].SetValue(World);
                 effectE6.Parameters["InverseTransposeWorld"].SetValue(Matrix.Transpose(Matrix.Invert(World)));
             } 
             
-            // R: update scene M3
+            // update scene M3
             // it's the same as scene E6
             if (displayNumber == 4)
             {
-                // R: update the scene
-                // R: Get the model's only effect
+                // update the scene
+                // Get the model's only effect
                 Effect effectE6 = this.models[2].Meshes[0].Effects[0];
 
                 // Matrices for 3D perspective projection
                 this.camera.SetEffectParameters(effectE6);
 
-                // R: create the world matrix for the model
+                // create the world matrix for the model
                 Matrix World = Matrix.CreateScale(150f) * Matrix.CreateTranslation(0, -12, 0) * Matrix.CreateRotationY(angle);
 
-                // R: set the world matrix to the effect
+                // set the world matrix to the effect
                 effectE6.Parameters["World"].SetValue(World);
                 effectE6.Parameters["InverseTransposeWorld"].SetValue(Matrix.Transpose(Matrix.Invert(World)));
 
-                // R: update the mirror
-                // R: create the world position matrix for the mirrorQuad
+                // update the mirror
+                // create the world position matrix for the mirrorQuad
                 Matrix mirrorWorld = Matrix.CreateScale(mirrorScale) * Matrix.CreateTranslation(mirrorPosition);
                 mirrorEffect.Parameters["World"].SetValue(mirrorWorld);
                 this.camera.SetEffectParameters(mirrorEffect);
@@ -369,17 +372,26 @@ namespace GraphicsPractical3
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            // R: Draw the scenes 
-            // R: draw scene E1
+            // Draw the scenes 
+            // draw scene E1
             if (displayNumber == 0)
             {
                 GraphicsDevice.Clear(ClearOptions.Target | ClearOptions.DepthBuffer, Color.CornflowerBlue, 1.0f, 0);
-                
-                // R: get the model's only mesh
+
+                // get the model's only mesh
                 ModelMesh meshE1 = this.models[0].Meshes[0];
 
-                // R: draw the mesh
+                // draw the mesh
                 meshE1.Draw();
+
+                // finally, draw the text using a the spritebatch
+                spriteBatch.Begin();
+                spriteBatch.DrawString(font, "Scene E1: Multiple Light Sources", new Vector2(45, 20), Color.Black);
+                spriteBatch.End();
+                // reset the render states affected by the spriteBatch draw
+                this.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
+                this.GraphicsDevice.BlendState = BlendState.Opaque;
+                GraphicsDevice.RasterizerState = RasterizerState.CullNone;
             }
 
 
@@ -388,11 +400,20 @@ namespace GraphicsPractical3
             {
                 GraphicsDevice.Clear(ClearOptions.Target | ClearOptions.DepthBuffer, Color.CornflowerBlue, 1.0f, 0);
 
-                // R: Get the model's only mesh
+                // Get the model's only mesh
                 ModelMesh mesh = this.models[1].Meshes[0];
 
                 // draw the mesh to the backbuffer
                 mesh.Draw();
+
+                // finally, draw the text using a the spritebatch
+                spriteBatch.Begin();
+                spriteBatch.DrawString(font, "Scene E3: Cell Shading", new Vector2(45, 20), Color.Black);
+                spriteBatch.End();
+                // reset the render states affected by the spriteBatch draw
+                this.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
+                this.GraphicsDevice.BlendState = BlendState.Opaque;
+                GraphicsDevice.RasterizerState = RasterizerState.CullNone;
             }
 
 
@@ -400,37 +421,46 @@ namespace GraphicsPractical3
             if (displayNumber == 2)
             {
                 // Clear the screen in a predetermined color and clear the depth buffer
-                this.GraphicsDevice.Clear(ClearOptions.Target | ClearOptions.DepthBuffer, Color.DeepSkyBlue, 1.0f, 0);
+                this.GraphicsDevice.Clear(ClearOptions.Target | ClearOptions.DepthBuffer, Color.CornflowerBlue, 1.0f, 0);
                 
-                // added: draw the QueenQuad to the backbuffer
+                // draw the QueenQuad to the backbuffer
                 this.DrawQueenQuad();
+
+                // finally, draw the text using a the spritebatch
+                spriteBatch.Begin();
+                spriteBatch.DrawString(font, "Scene E1: Color Filter", new Vector2(45, 20), Color.Black);
+                spriteBatch.End();
+                // reset the render states affected by the spriteBatch draw
+                this.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
+                this.GraphicsDevice.BlendState = BlendState.Opaque;
+                GraphicsDevice.RasterizerState = RasterizerState.CullNone;
             }
 
-            // R: Draw scene E6
+            // Draw scene E6
             if (displayNumber == 3)
             {
-                // R: set render target to texture before clearing
+                // set render target to texture before clearing
                 GraphicsDevice.SetRenderTarget(renderTargetOriginal);
                 GraphicsDevice.Clear(ClearOptions.Target | ClearOptions.DepthBuffer, Color.CornflowerBlue, 1.0f, 0);
                 
-                // R: get the model's only mesh
+                // get the model's only mesh
                 ModelMesh meshE6 = this.models[2].Meshes[0];
-                // R: get the model's effect
+                // get the model's effect
                 Effect effectE6 = meshE6.Effects[0];
-                // R: set the technique
+                // set the technique
                 effectE6.CurrentTechnique = effectE6.Techniques["RenderScene"];
 
-                // R: draw the mesh
+                // draw the mesh
                 meshE6.Draw();
 
-                // R: draw the texture to the second renderTarget
+                // draw the texture to the second renderTarget
                 GraphicsDevice.SetRenderTarget(renderTargeHorizontalBlur);
                 GraphicsDevice.Clear(ClearOptions.Target | ClearOptions.DepthBuffer, Color.CornflowerBlue, 1.0f, 0);
 
-                // R: set the camera perpendicular on the blurQuad
+                // set the camera perpendicular on the blurQuad
                 this.camera.Eye = new Vector3(0, 0, 100);
 
-                // added: set the technique of the quad
+                // set the technique of the quad
                 this.effectE6Blur.CurrentTechnique = effectE6Blur.Techniques["Technique1"];
                 // set the matrices for 3D perspective projection in the effect
                 this.camera.SetEffectParameters(effectE6Blur);
@@ -440,20 +470,20 @@ namespace GraphicsPractical3
                 float BlurDistanceX = 1.0f / (float)this.graphics.PreferredBackBufferWidth;
                 this.effectE6Blur.Parameters["BlurDistanceX"].SetValue(BlurDistanceX);
 
-                // added: draw the quad
-                // added: apply effect passes
+                // draw the quad
+                // apply effect passes
                 foreach (EffectPass pass in this.effectE6Blur.CurrentTechnique.Passes)
                 {
                     pass.Apply();
                 }
 
-                // added: draw the quad using the QuadEffect
+                // draw the quad using the QuadEffect
                 this.GraphicsDevice.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, this.quadVertices, 0, this.quadVertices.Length, this.quadIndices, 0, this.quadIndices.Length / 3);
                 GraphicsDevice.SetRenderTarget(null);
 
-                // R: draw to the screen
+                // draw to the screen
 
-                // added: set the technique of the quad
+                // set the technique of the quad
                 this.effectE6Blur.CurrentTechnique = effectE6Blur.Techniques["Technique2"];
                 // Matrices for 3D perspective projection
                 this.camera.SetEffectParameters(effectE6Blur);
@@ -463,29 +493,38 @@ namespace GraphicsPractical3
                 float BlurDistanceY = 1.0f / (float)this.graphics.PreferredBackBufferHeight;
                 this.effectE6Blur.Parameters["BlurDistanceY"].SetValue(BlurDistanceY);
 
-                // added: draw the quad
-                // added: apply effect passes
+                // draw the quad
+                // apply effect passes
                 foreach (EffectPass pass in this.effectE6Blur.CurrentTechnique.Passes)
                 {
                     pass.Apply();
                 }
 
-                // added: draw the quad using the QuadEffect
+                // draw the quad using the QuadEffect
                 this.GraphicsDevice.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, this.quadVertices, 0, this.quadVertices.Length, this.quadIndices, 0, this.quadIndices.Length / 3);
 
                 // reset the camera to the correct position
                 this.camera.Eye = new Vector3(0, 50, 100);
+
+                // finally, draw the text using a the spritebatch
+                spriteBatch.Begin();
+                spriteBatch.DrawString(font, "Scene E6: Gaussian Blur", new Vector2(45, 20), Color.Black);
+                spriteBatch.End();
+                // reset the render states affected by the spriteBatch draw
+                this.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
+                this.GraphicsDevice.BlendState = BlendState.Opaque;
+                GraphicsDevice.RasterizerState = RasterizerState.CullNone;
             }
 
-            // R: draw scene M3
+            // draw scene M3
             if (displayNumber == 4)
             {
-                // R: get the model's only mesh
-                // R: we're reusing the model of scene 2
+                // get the model's only mesh
+                // we're reusing the model of scene 2
                 ModelMesh meshM3 = this.models[2].Meshes[0];
-                // R: get the model's effect
+                // get the model's effect
                 Effect effectE6 = meshM3.Effects[0];
-                // R: set the technique
+                // set the technique
                 effectE6.CurrentTechnique = effectE6.Techniques["RenderScene"];
                 camera.SetEffectParameters(effectE6);
 
@@ -506,7 +545,7 @@ namespace GraphicsPractical3
                 camera = new Camera(cameraPositionMirrored, originMirrored, new Vector3(0, 1, 0));
                 // world
                 Matrix reflection = Matrix.CreateScale(new Vector3(-1, 1, 1));
-                // R: create the world matrix for the model
+                // create the world matrix for the model
                 Matrix reflectedWorld4 = Matrix.CreateScale(150f) * Matrix.CreateTranslation(100 * (displayNumber - 4), -12, 0) * Matrix.CreateRotationY(angle) * reflection;
                 
                 // reset the depth buffer
@@ -520,7 +559,7 @@ namespace GraphicsPractical3
 
                 // undo mirroring of camera and world
                 camera = new Camera(cameraPosition, new Vector3(0, 0, 0), new Vector3(0, 1, 0));
-                // R: recreate the normal world matrix for the model
+                // recreate the normal world matrix for the model
                 Matrix World = Matrix.CreateScale(150f) * Matrix.CreateTranslation(100 * (displayNumber - 4), -12, 0) * Matrix.CreateRotationY(angle);
                 camera.SetEffectParameters(effectE6);
                 effectE6.Parameters["World"].SetValue(World);
@@ -529,6 +568,15 @@ namespace GraphicsPractical3
                 GraphicsDevice.DepthStencilState = DepthStencilState.Default;
                 GraphicsDevice.Clear(ClearOptions.Stencil | ClearOptions.DepthBuffer, Color.CornflowerBlue, 1.0f, 0);
                 meshM3.Draw();
+
+                // finally, draw the text using a the spritebatch
+                spriteBatch.Begin();
+                spriteBatch.DrawString(font, "Scene M3: Reflection", new Vector2(45, 20), Color.Black);
+                spriteBatch.End();
+                // reset the render states affected by the spriteBatch draw
+                this.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
+                this.GraphicsDevice.BlendState = BlendState.Opaque;
+                GraphicsDevice.RasterizerState = RasterizerState.CullNone;
             }
 
             base.Draw(gameTime);
@@ -638,13 +686,13 @@ namespace GraphicsPractical3
         // Draws the QueenQuad for E5
         protected void DrawQueenQuad()
         {
-            // added: apply effect passes
+            // apply effect passes
             foreach (EffectPass pass in this.QueenQuadEffect.CurrentTechnique.Passes)
             {
                 pass.Apply();
             }
 
-            // added: draw the picture using the QueenQuadEffect
+            // draw the picture using the QueenQuadEffect
             this.GraphicsDevice.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, this.QueenQuadVertices, 0, this.QueenQuadVertices.Length, this.QueenQuadIndices, 0, this.QueenQuadIndices.Length / 3);
         }
 
