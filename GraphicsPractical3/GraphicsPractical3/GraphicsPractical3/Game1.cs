@@ -159,6 +159,17 @@ namespace GraphicsPractical3
             lightColors[4] = new Vector4(0.2f, 0.2f, 0.2f, 0.0f);
             effectE1.Parameters["LightColors"].SetValue(lightColors);
 
+
+            // E3
+            Effect effectE3 = this.Content.Load<Effect>("Effects/CellShader");
+            this.models[1] = this.Content.Load<Model>("Models/femalehead");
+            this.models[1].Meshes[0].MeshParts[0].Effect = effectE3;
+            // R: Set the effect parameters
+            effectE3.CurrentTechnique = effectE3.Techniques["Technique1"];
+            // Matrices for 3D perspective projection
+            this.camera.SetEffectParameters(effectE3);
+
+
             // E5
             // load "QueenQuadEffect" effect for the quad
             QueenQuadEffect = this.Content.Load<Effect>("Effects/QueenEffect");
@@ -289,8 +300,25 @@ namespace GraphicsPractical3
                 effectE1.Parameters["InverseTransposeWorld"].SetValue(Matrix.Transpose(Matrix.Invert(World)));
             }
 
+
+            // E3
+            if (displayNumber == 1)
+            {
+
+                // R: create the world matrix for the model
+                Matrix World = Matrix.CreateScale(1.5f) * Matrix.CreateTranslation(0, 0, 0) * Matrix.CreateRotationY(angle);
+
+                // get the meshes effect
+                Effect effectE3 = this.models[1].Meshes[0].Effects[0];
+                // R: set the world matrix to the effect
+                effectE3.Parameters["DiffuseColor"].SetValue(new Vector4(1f, 1f, 0.0f, 1.0f));
+                effectE3.Parameters["World"].SetValue(World);
+                effectE3.Parameters["InverseTransposeWorld"].SetValue(Matrix.Transpose(Matrix.Invert(World)));
+            }
+
+
             // R: update scene E6
-            if (displayNumber == 2)
+            if (displayNumber == 3)
             {
                 // R: Get the model's only effect
                 Effect effectE6 = this.models[2].Meshes[0].Effects[0];
@@ -341,8 +369,6 @@ namespace GraphicsPractical3
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-
-            // TODO: Add your drawing code here
             // R: Draw the scenes 
             // R: draw scene E1
             if (displayNumber == 0)
@@ -357,8 +383,21 @@ namespace GraphicsPractical3
             }
 
 
-            // draw E5
+            // draw E3
             if (displayNumber == 1)
+            {
+                GraphicsDevice.Clear(ClearOptions.Target | ClearOptions.DepthBuffer, Color.CornflowerBlue, 1.0f, 0);
+
+                // R: Get the model's only mesh
+                ModelMesh mesh = this.models[1].Meshes[0];
+
+                // draw the mesh to the backbuffer
+                mesh.Draw();
+            }
+
+
+            // draw E5
+            if (displayNumber == 2)
             {
                 // Clear the screen in a predetermined color and clear the depth buffer
                 this.GraphicsDevice.Clear(ClearOptions.Target | ClearOptions.DepthBuffer, Color.DeepSkyBlue, 1.0f, 0);
@@ -368,7 +407,7 @@ namespace GraphicsPractical3
             }
 
             // R: Draw scene E6
-            if (displayNumber == 2)
+            if (displayNumber == 3)
             {
                 // R: set render target to texture before clearing
                 GraphicsDevice.SetRenderTarget(renderTargetOriginal);
