@@ -36,6 +36,14 @@ namespace GraphicsPractical3
         // R: flag that ensures only one switch per keypress
         private bool wasReleased;
 
+        // E5
+        // N: Grayscale Picture of QueenQuad :)
+        private VertexPositionNormalTexture[] QueenQuadVertices;
+        private short[] QueenQuadIndices;
+        private Matrix QueenQuadTransform;
+        Effect QueenQuadEffect;
+
+
         // E6
         // R: render targets for blurring
         private RenderTarget2D renderTargetOriginal;
@@ -49,6 +57,7 @@ namespace GraphicsPractical3
 
         // R: filter used for the Gaussian blur
         float[] gaussianDistribution;
+
 
         // M3
         // vertices for the mirrorQuad
@@ -122,10 +131,9 @@ namespace GraphicsPractical3
             renderTargetOriginal = new RenderTarget2D(GraphicsDevice, pp.BackBufferWidth, pp.BackBufferHeight, true, GraphicsDevice.DisplayMode.Format, DepthFormat.Depth24Stencil8);
             renderTargeHorizontalBlur = new RenderTarget2D(GraphicsDevice, pp.BackBufferWidth, pp.BackBufferHeight, true, GraphicsDevice.DisplayMode.Format, DepthFormat.Depth24Stencil8);
 
-            // TODO: use this.Content to load your game content here
-            // R: TODO: load effects
+            // Here all content is loaded for all scenes
 
-            // R: TODO: Load models
+            // E1
             // R: model E1
             Effect effectE1 = this.Content.Load<Effect>("Effects/EffectE1");
             this.models[0] = this.Content.Load<Model>("Models/bunny");
@@ -151,7 +159,23 @@ namespace GraphicsPractical3
             lightColors[4] = new Vector4(0.2f, 0.2f, 0.2f, 0.0f);
             effectE1.Parameters["LightColors"].SetValue(lightColors);
 
-            // R: scene E6
+            // E5
+            // load "QueenQuadEffect" effect for the quad
+            QueenQuadEffect = this.Content.Load<Effect>("Effects/QueenEffect");
+            // set the technique of effect
+            this.QueenQuadEffect.CurrentTechnique = QueenQuadEffect.Techniques["Technique1"];
+
+            // load the texture to the QueenQuadEffect
+            QueenQuadEffect.Parameters["QueenTexture"].SetValue(Content.Load<Texture>("Textures/queen"));
+            // setup the World TLV
+            this.QueenQuadEffect.Parameters["World"].SetValue(Matrix.CreateScale(100.0f));
+            // Position the camera dead ahead of the quad, and pass to the QueenEffect
+            new Camera(new Vector3(0, 0, 100), new Vector3(0, 0, 0), new Vector3(0, 1, 0)).SetEffectParameters(QueenQuadEffect);
+            // Setup the QueenQuad
+            setupQueenQuad();
+
+
+            // E6
             // R: load the model and effect for the scene
             Effect effectE6 = this.Content.Load<Effect>("Effects/EffectE6M3");
             this.models[2] = this.Content.Load<Model>("Models/bunny2");
@@ -167,6 +191,8 @@ namespace GraphicsPractical3
 
             // load the effect for blurring
             effectE6Blur = this.Content.Load<Effect>("Effects/EffectE6M3_blur");
+            // set the view and projection matrices as if the camera is dead ahead of the projection quad
+
             this.setupQuad();
 
             // R: set the gaussian distribution
@@ -187,8 +213,8 @@ namespace GraphicsPractical3
             // R: pass the 1D kernel to the effect
             effectE6Blur.Parameters["BlurKernel"].SetValue(gaussianDistribution);
 
-            // R: scene M3
-            // NB: scene M3 reuses the model+effect from E6
+            // M3
+            // NB: scene M3 also reuses the model+effect from E6
             // Load the effect of the mirror
             mirrorEffect = this.Content.Load<Effect>("Effects/EffectM3Mirror");
             mirrorEffect.CurrentTechnique = mirrorEffect.Techniques["Technique1"];
@@ -256,7 +282,7 @@ namespace GraphicsPractical3
                 this.camera.SetEffectParameters(effectE1);
 
                 // R: create the world matrix for the model
-                Matrix World = Matrix.CreateScale(150f) * Matrix.CreateTranslation(100 * (displayNumber), -12, 0) * Matrix.CreateRotationY(angle);
+                Matrix World = Matrix.CreateScale(150f) * Matrix.CreateTranslation(0, -12, 0) * Matrix.CreateRotationY(angle);
 
                 // R: set the world matrix to the effect
                 effectE1.Parameters["World"].SetValue(World);
@@ -273,7 +299,7 @@ namespace GraphicsPractical3
                 this.camera.SetEffectParameters(effectE6);
 
                 // R: create the world matrix for the model
-                Matrix World = Matrix.CreateScale(150f) * Matrix.CreateTranslation(100 * (displayNumber - 2), -12, 0) * Matrix.CreateRotationY(angle);
+                Matrix World = Matrix.CreateScale(150f) * Matrix.CreateTranslation(0, -12, 0) * Matrix.CreateRotationY(angle);
 
                 // R: set the world matrix to the effect
                 effectE6.Parameters["World"].SetValue(World);
@@ -292,7 +318,7 @@ namespace GraphicsPractical3
                 this.camera.SetEffectParameters(effectE6);
 
                 // R: create the world matrix for the model
-                Matrix World = Matrix.CreateScale(150f) * Matrix.CreateTranslation(100 * (displayNumber - 4), -12, 0) * Matrix.CreateRotationY(angle);
+                Matrix World = Matrix.CreateScale(150f) * Matrix.CreateTranslation(0, -12, 0) * Matrix.CreateRotationY(angle);
 
                 // R: set the world matrix to the effect
                 effectE6.Parameters["World"].SetValue(World);
@@ -330,7 +356,16 @@ namespace GraphicsPractical3
                 meshE1.Draw();
             }
 
-            
+
+            // draw E5
+            if (displayNumber == 1)
+            {
+                // Clear the screen in a predetermined color and clear the depth buffer
+                this.GraphicsDevice.Clear(ClearOptions.Target | ClearOptions.DepthBuffer, Color.DeepSkyBlue, 1.0f, 0);
+                
+                // added: draw the QueenQuad to the backbuffer
+                this.DrawQueenQuad();
+            }
 
             // R: Draw scene E6
             if (displayNumber == 2)
@@ -358,7 +393,7 @@ namespace GraphicsPractical3
 
                 // added: set the technique of the quad
                 this.effectE6Blur.CurrentTechnique = effectE6Blur.Techniques["Technique1"];
-                // Matrices for 3D perspective projection
+                // set the matrices for 3D perspective projection in the effect
                 this.camera.SetEffectParameters(effectE6Blur);
                 this.effectE6Blur.Parameters["World"].SetValue(Matrix.CreateScale(55.5f));
                 this.effectE6Blur.Parameters["t"].SetValue((Texture2D)renderTargetOriginal);
@@ -399,6 +434,7 @@ namespace GraphicsPractical3
                 // added: draw the quad using the QuadEffect
                 this.GraphicsDevice.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, this.quadVertices, 0, this.quadVertices.Length, this.quadIndices, 0, this.quadIndices.Length / 3);
 
+                // reset the camera to the correct position
                 this.camera.Eye = new Vector3(0, 50, 100);
             }
 
@@ -528,6 +564,49 @@ namespace GraphicsPractical3
             this.mirrorQuad[3].Position = new Vector3(1, 0, 0);
             this.mirrorQuad[3].Normal = quadNormal;
             this.mirrorQuad[3].TextureCoordinate = new Vector2(1, 1);
+        }
+
+        // Sets up the QueenQuad for E5
+        private void setupQueenQuad()
+        {
+            float scale = 50.0f;
+
+            // Normal points up
+            Vector3 QueenQuadNormal = new Vector3(0, 0, 1);
+
+            this.QueenQuadVertices = new VertexPositionNormalTexture[4];
+            // Top left
+            this.QueenQuadVertices[0].Position = new Vector3(-0.5f, 0.3f, 0);
+            this.QueenQuadVertices[0].Normal = QueenQuadNormal;
+            this.QueenQuadVertices[0].TextureCoordinate = new Vector2(0, 0);
+            // Top right
+            this.QueenQuadVertices[1].Position = new Vector3(0.5f, 0.3f, 0);
+            this.QueenQuadVertices[1].Normal = QueenQuadNormal;
+            this.QueenQuadVertices[1].TextureCoordinate = new Vector2(1, 0);
+            // Bottom left
+            this.QueenQuadVertices[2].Position = new Vector3(-0.5f, -0.3f, 0);
+            this.QueenQuadVertices[2].Normal = QueenQuadNormal;
+            this.QueenQuadVertices[2].TextureCoordinate = new Vector2(0, 1);
+            // Bottom right
+            this.QueenQuadVertices[3].Position = new Vector3(0.5f, -0.3f, 0);
+            this.QueenQuadVertices[3].Normal = QueenQuadNormal;
+            this.QueenQuadVertices[3].TextureCoordinate = new Vector2(1, 1);
+
+            this.QueenQuadIndices = new short[] { 0, 1, 2, 1, 2, 3 };
+            this.QueenQuadTransform = Matrix.CreateScale(scale);
+        }
+
+        // Draws the QueenQuad for E5
+        protected void DrawQueenQuad()
+        {
+            // added: apply effect passes
+            foreach (EffectPass pass in this.QueenQuadEffect.CurrentTechnique.Passes)
+            {
+                pass.Apply();
+            }
+
+            // added: draw the picture using the QueenQuadEffect
+            this.GraphicsDevice.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, this.QueenQuadVertices, 0, this.QueenQuadVertices.Length, this.QueenQuadIndices, 0, this.QueenQuadIndices.Length / 3);
         }
 
         // stencil buffers used to create a correct mirror scene
