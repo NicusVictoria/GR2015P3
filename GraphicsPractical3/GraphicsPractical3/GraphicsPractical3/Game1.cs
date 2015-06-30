@@ -197,7 +197,7 @@ namespace GraphicsPractical3
             effect2Blur.Parameters["BlurKernel"].SetValue(gaussianDistribution);
 
             // R: scene 3
-            mirrorEffect = this.Content.Load<Effect>("Effects/Effect3");
+            mirrorEffect = this.Content.Load<Effect>("Effects/Effect4");
             mirrorEffect.CurrentTechnique = mirrorEffect.Techniques["Technique1"];
             mirrorScale = 35.0f;
             // R: define the position of the mirror
@@ -287,9 +287,9 @@ namespace GraphicsPractical3
                 effect2.Parameters["InverseTransposeWorld"].SetValue(Matrix.Transpose(Matrix.Invert(World2)));
             } 
             
-            // R: update scene 3
+            // R: update scene 4
             // it's the same as scene 2
-            if (displayNumber == 3)
+            if (displayNumber == 4)
             {
                 // R: update the scene
                 // R: Get the model's only effect
@@ -299,11 +299,11 @@ namespace GraphicsPractical3
                 this.camera.SetEffectParameters(effect2);
 
                 // R: create the world matrix for the model
-                Matrix World3 = Matrix.CreateScale(150f) * Matrix.CreateTranslation(100 * (displayNumber - 3), -12, 0) * Matrix.CreateRotationY(angle);
+                Matrix World4 = Matrix.CreateScale(150f) * Matrix.CreateTranslation(100 * (displayNumber - 4), -12, 0) * Matrix.CreateRotationY(angle);
 
                 // R: set the world matrix to the effect
-                effect2.Parameters["World"].SetValue(World3);
-                effect2.Parameters["InverseTransposeWorld"].SetValue(Matrix.Transpose(Matrix.Invert(World3)));
+                effect2.Parameters["World"].SetValue(World4);
+                effect2.Parameters["InverseTransposeWorld"].SetValue(Matrix.Transpose(Matrix.Invert(World4)));
 
                 // R: update the mirror
                 // R: create the world position matrix for the mirrorQuad
@@ -430,10 +430,11 @@ namespace GraphicsPractical3
                 this.camera.Eye = new Vector3(0, 50, 100);
             }
 
-            // R: draw scene 3
-            if (displayNumber == 3)
+            // R: draw scene 4
+            if (displayNumber == 4)
             {
                 // R: get the model's only mesh
+                // R: we're reusing the model of scene 2
                 ModelMesh mesh2 = this.models[2].Meshes[0];
                 // R: get the model's effect
                 Effect effect2 = mesh2.Effects[0];
@@ -459,7 +460,7 @@ namespace GraphicsPractical3
                 // world
                 Matrix reflection = Matrix.CreateScale(new Vector3(-1, 1, 1));
                 // R: create the world matrix for the model
-                Matrix reflectedWorld3 = Matrix.CreateScale(150f) * Matrix.CreateTranslation(100 * (displayNumber - 3), -12, 0) * Matrix.CreateRotationY(angle) * reflection;
+                Matrix reflectedWorld4 = Matrix.CreateScale(150f) * Matrix.CreateTranslation(100 * (displayNumber - 4), -12, 0) * Matrix.CreateRotationY(angle) * reflection;
                 
                 // reset the depth buffer
                 GraphicsDevice.Clear(ClearOptions.DepthBuffer, Color.CornflowerBlue, 1.0f, 0);
@@ -467,15 +468,15 @@ namespace GraphicsPractical3
                 // render the scene to the backbuffer where the stencilbuffer == 1, i.e. in the mirrorQuad
                 GraphicsDevice.DepthStencilState = checkMirror;
                 camera.SetEffectParameters(effect2);
-                effect2.Parameters["World"].SetValue(reflectedWorld3);
+                effect2.Parameters["World"].SetValue(reflectedWorld4);
                 mesh2.Draw();
 
                 // undo mirroring of camera and world
                 camera = new Camera(cameraPosition, new Vector3(0, 0, 0), new Vector3(0, 1, 0));
                 // R: recreate the normal world matrix for the model
-                Matrix World3 = Matrix.CreateScale(150f) * Matrix.CreateTranslation(100 * (displayNumber - 3), -12, 0) * Matrix.CreateRotationY(angle);
+                Matrix World4 = Matrix.CreateScale(150f) * Matrix.CreateTranslation(100 * (displayNumber - 4), -12, 0) * Matrix.CreateRotationY(angle);
                 camera.SetEffectParameters(effect2);
-                effect2.Parameters["World"].SetValue(World3);
+                effect2.Parameters["World"].SetValue(World4);
 
                 // render the scene to the backbuffer normally
                 GraphicsDevice.DepthStencilState = DepthStencilState.Default;
