@@ -8,6 +8,16 @@ float4x4 InverseTransposeWorld;
 
 // TODO: add effect parameters here.
 
+float Blur : UNITSSCALE
+<
+string units = "inches";
+string UIWidget = "slider";
+float uimin = 0.0;
+float uimax = 10.0;
+float uistep = 0.01;
+string UIName = "Blur";
+> = 1.0;
+
 struct VertexShaderInput
 {
     float4 Position : POSITION0;
@@ -30,7 +40,7 @@ struct VertexShaderOutput
 };
 
 // N: Cell Shading is implemented here
-float4 CellShader(float4 normal)
+float4 CellShader(float4 Normal3D)
 {
 	// N: define output variable
 	float4 color;
@@ -42,7 +52,7 @@ float4 CellShader(float4 normal)
 	float3x3 rotateAndScale = (float3x3) InverseTransposeWorld;
 
 	// N: rotate and scale the normal according to world transformations
-	float3 rotatedNormal = mul(normal.xyz, rotateAndScale);
+	float3 rotatedNormal = mul(Normal3D.xyz, rotateAndScale);
 
 	// N: rotate and scale the normal according to world transformations
 	float3 inversedNormal = normalize( -1.0f * rotatedNormal);
@@ -51,29 +61,62 @@ float4 CellShader(float4 normal)
 	float dotProduct = dot(inversedNormal, lightDirection);
 
 	// N: 
-	float f = 0;
+
+	float index[4] = { 0.0f, 0.33f, 0.67f, 1.0f };
 	
+	int colorIndex = 0;
 	if (dotProduct > 0.25)
 	{
-		f = 0.33f;
+		colorIndex = 1;
 	}
 	
 	if (dotProduct > 0.5)
 	{
-		f = 0.66f;
+		colorIndex = 2;
 	}
 	if (dotProduct > 0.75)
 	{
-		f = 1.0f;
+		colorIndex = 3;
 	}
-	
 
-	color.xyz = DiffuseColor * f;
+	float dx = abs(ddx(colorIndex));
+	dx *= Blur;
+	float dy = abs(ddy(colorIndex));
+	dy *= Blur;
+
+	int hBlendIndex;
+	int vBlendIndex;
+	if (dx < 0.5f)
+	{
+		hBlendIndex = min(3, colorIndex + 1);
+	}
+	else
+	{
+
+		hBlendIndex = max(0, colorIndex - 1);
+	}
+
+	if (dy < 0.5f)
+	{
+		vBlendIndex = min(3, colorIndex + 1);
+	}
+	else
+	{
+
+		vBlendIndex = max(0, colorIndex - 1);
+	}
+	float hBlendFactor = lerp(index[colorIndex], index[hBlendIndex], dx);
+	float vBlendFactor = lerp(index[colorIndex], index[vBlendIndex], dy);
+	float combinedBlendFactor = 0.5f * vBlendFactor + 0.5f * hBlendFactor;
+
+	color = DiffuseColor * combinedBlendFactor;
+	
+	/*
+	float3 diff = max(abs(ddx(dotProduct)), abs(ddy(dotProduct)));
+	diff *= Blur;
+	*/
 
 	color.w = 0.0f;
-
-
-
 	return color;
 }
 
@@ -106,7 +149,7 @@ technique Technique1
     {
         // TODO: set renderstates here.
 
-        VertexShader = compile vs_2_0 VertexShaderFunction();
-        PixelShader = compile ps_2_0 PixelShaderFunction();
+        VertexShader = compile vs_3_0 VertexShaderFunction();
+        PixelShader = compile ps_3_0 PixelShaderFunction();
     }
 }

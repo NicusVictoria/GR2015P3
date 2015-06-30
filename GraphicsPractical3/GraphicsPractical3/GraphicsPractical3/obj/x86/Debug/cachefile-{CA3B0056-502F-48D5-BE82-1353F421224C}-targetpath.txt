@@ -1,4 +1,4 @@
 Content\Effects\Effect1.xnb
+Content\Effects\CellShader.xnb
 Content\Models\bunny.xnb
 Content\Models\femalehead.xnb
-Content\Effects\CellShader.xnb

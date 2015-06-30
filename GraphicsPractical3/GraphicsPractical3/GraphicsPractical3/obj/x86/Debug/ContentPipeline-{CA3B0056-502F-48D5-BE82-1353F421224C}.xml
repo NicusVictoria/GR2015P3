@@ -11,6 +11,15 @@
       <Time>2015-06-16T11:51:04.2215804+02:00</Time>
     </Item>
     <Item>
+      <Source>Effects\CellShader.fx</Source>
+      <Name>Effects\CellShader</Name>
+      <Importer>EffectImporter</Importer>
+      <Processor>EffectProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Nicus\Documents\GitHub\GR2015P3\GraphicsPractical3\GraphicsPractical3\GraphicsPractical3\bin\x86\Debug\Content\Effects\CellShader.xnb</Output>
+      <Time>2015-06-30T17:30:05.881621+02:00</Time>
+    </Item>
+    <Item>
       <Source>Models\bunny.fbx</Source>
       <Name>Models\bunny</Name>
       <Importer>FbxImporter</Importer>
@@ -20,7 +29,7 @@
       <Time>2015-06-16T11:51:04.2596699+02:00</Time>
       <Dependency>
         <Key>C:\Users\Nicus\Documents\GitHub\GR2015P3\GraphicsPractical3\GraphicsPractical3\GraphicsPractical3\obj\x86\Debug\Models\bunny_0.xml</Key>
-        <Value>2015-06-27T15:23:48.5009024+02:00</Value>
+        <Value>2015-06-30T11:04:59.7268749+02:00</Value>
       </Dependency>
     </Item>
     <Item>
@@ -33,7 +42,7 @@
       <Time>2015-06-16T11:51:04.2736792+02:00</Time>
       <Dependency>
         <Key>C:\Users\Nicus\Documents\GitHub\GR2015P3\GraphicsPractical3\GraphicsPractical3\GraphicsPractical3\obj\x86\Debug\Models\femalehead_0.xml</Key>
-        <Value>2015-06-27T15:23:48.8889545+02:00</Value>
+        <Value>2015-06-30T11:05:00.1519408+02:00</Value>
       </Dependency>
     </Item>
     <Item>
@@ -50,20 +59,11 @@
       <Output>C:\Users\Nicus\Documents\GitHub\GR2015P3\GraphicsPractical3\GraphicsPractical3\GraphicsPractical3\obj\x86\Debug\Models\femalehead_0.xml</Output>
       <Time>2015-06-16T11:51:04.2736792+02:00</Time>
     </Item>
-    <Item>
-      <Source>Effects\CellShader.fx</Source>
-      <Name>Effects\CellShader</Name>
-      <Importer>EffectImporter</Importer>
-      <Processor>EffectProcessor</Processor>
-      <Options>None</Options>
-      <Output>C:\Users\Nicus\Documents\GitHub\GR2015P3\GraphicsPractical3\GraphicsPractical3\GraphicsPractical3\bin\x86\Debug\Content\Effects\CellShader.xnb</Output>
-      <Time>2015-06-27T22:30:45.7224772+02:00</Time>
-    </Item>
     <BuildSuccessful>true</BuildSuccessful>
     <Settings>
       <ContentProjectGUID>{CA3B0056-502F-48D5-BE82-1353F421224C}</ContentProjectGUID>
       <TargetPlatform>Windows</TargetPlatform>
-      <TargetProfile>Reach</TargetProfile>
+      <TargetProfile>HiDef</TargetProfile>
       <BuildConfiguration>Debug</BuildConfiguration>
       <CompressContent>false</CompressContent>
       <RootDirectory>C:\Users\Nicus\Documents\GitHub\GR2015P3\GraphicsPractical3\GraphicsPractical3\GraphicsPractical3Content\</RootDirectory>
