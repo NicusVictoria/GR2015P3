@@ -30,19 +30,19 @@ namespace GraphicsPractical3
 
         // R: Models
         private Model[] models;
-        private float[] modelScales;
 
         // R: model to display
         private int displayNumber;
         // R: flag that ensures only one switch per keypress
         private bool wasReleased;
 
+        // E6
         // R: render targets for blurring
         private RenderTarget2D renderTargetOriginal;
         private RenderTarget2D renderTargeHorizontalBlur;
 
         // Effect for the blur
-        private Effect effect2Blur;
+        private Effect effectE6Blur;
         // vertices and indices for the blurQuad
         private VertexPositionNormalTexture[] quadVertices;
         private short[] quadIndices;
@@ -50,6 +50,7 @@ namespace GraphicsPractical3
         // R: filter used for the Gaussian blur
         float[] gaussianDistribution;
 
+        // M3
         // vertices for the mirrorQuad
         private VertexPositionNormalTexture[] mirrorQuad;
         // Effect for drawing the mirror
@@ -102,8 +103,7 @@ namespace GraphicsPractical3
             displayNumber = 0;
             bool wasReleased = true;
             // R: initialize model array and scale array (due to the different sizes of models)
-            models = new Model[6];
-            modelScales = new float[6];
+            models = new Model[5];
 
             base.Initialize();
         }
@@ -126,26 +126,13 @@ namespace GraphicsPractical3
             // R: TODO: load effects
 
             // R: TODO: Load models
-            // R: model 0
-            Effect effect0 = this.Content.Load<Effect>("Effects/Effect0");
+            // R: model E1
+            Effect effectE1 = this.Content.Load<Effect>("Effects/EffectE1");
             this.models[0] = this.Content.Load<Model>("Models/bunny");
-            this.models[0].Meshes[0].MeshParts[0].Effect = effect0;
-            this.modelScales[0] = 200.0f;
+            this.models[0].Meshes[0].MeshParts[0].Effect = effectE1;
 
-            // R: model 1
-            Effect effect1 = this.Content.Load<Effect>("Effects/Effect1");
-            this.models[1] = this.Content.Load<Model>("Models/femalehead");
-            this.models[1].Meshes[0].MeshParts[0].Effect = effect1;
-            this.modelScales[1] = 1f;
-
-            // R: model 2
-            Effect effect2 = this.Content.Load<Effect>("Effects/Effect2");
-            this.models[2] = this.Content.Load<Model>("Models/bunny2");
-            this.models[2].Meshes[0].MeshParts[0].Effect = effect2;
-            this.modelScales[2] = 200.0f;
-
-            // R: Set the effect parameters for scene 0
-            effect0.CurrentTechnique = effect0.Techniques["Technique1"];
+            // R: Set the effect parameters for scene E1
+            effectE1.CurrentTechnique = effectE1.Techniques["Technique1"];
 
             // R: Set the lights
             Vector4[] lightPositions = new Vector4[5];
@@ -154,7 +141,7 @@ namespace GraphicsPractical3
             lightPositions[2] = new Vector4(-50.0f, 50.0f, -50.0f, 0.0f);
             lightPositions[3] = new Vector4(50.0f, 50.0f, -50.0f, 0.0f);
             lightPositions[4] = new Vector4(0.0f, 50.0f, 0.0f, 0.0f);
-            effect0.Parameters["LightPositions"].SetValue(lightPositions);
+            effectE1.Parameters["LightPositions"].SetValue(lightPositions);
 
             Vector4[] lightColors = new Vector4[5];
             lightColors[0] = new Vector4(0.6f, 0.0f, 0.0f, 0.0f);
@@ -162,23 +149,27 @@ namespace GraphicsPractical3
             lightColors[2] = new Vector4(0.0f, 0.6f, 0.0f, 0.0f);
             lightColors[3] = new Vector4(0.3f, 0.3f, 0.0f, 0.0f);
             lightColors[4] = new Vector4(0.2f, 0.2f, 0.2f, 0.0f);
-            effect0.Parameters["LightColors"].SetValue(lightColors);
+            effectE1.Parameters["LightColors"].SetValue(lightColors);
 
-            // R: scene 2
+            // R: scene E6
+            // R: load the model and effect for the scene
+            Effect effectE6 = this.Content.Load<Effect>("Effects/EffectE6M3");
+            this.models[2] = this.Content.Load<Model>("Models/bunny2");
+            this.models[2].Meshes[0].MeshParts[0].Effect = effectE6;
 
             // R: set the light
             lightPositions = new Vector4[1];
             lightPositions[0] = new Vector4(50.0f, 50.0f, 50.0f, 0.0f);
-            effect2.Parameters["LightPositions"].SetValue(lightPositions);
+            effectE6.Parameters["LightPositions"].SetValue(lightPositions);
             lightColors = new Vector4[1];
             lightColors[0] = new Vector4(1.0f, 1.0f, 1.0f, 0.0f);
-            effect2.Parameters["LightColors"].SetValue(lightColors);
+            effectE6.Parameters["LightColors"].SetValue(lightColors);
 
-
-            effect2Blur = this.Content.Load<Effect>("Effects/Effect2_blur");
+            // load the effect for blurring
+            effectE6Blur = this.Content.Load<Effect>("Effects/EffectE6M3_blur");
             this.setupQuad();
 
-            // R: load the gaussian blur
+            // R: set the gaussian distribution
             // Calculated from http://dev.theomader.com/gaussian-kernel-calculator/, with sigma = 0.785 and size = 7
             // This best approximates the kernel from https://en.wikipedia.org/wiki/Gaussian_blur
             gaussianDistribution = new float[7] 
@@ -194,10 +185,12 @@ namespace GraphicsPractical3
             // Normalize the distribution
             gaussianDistribution = this.normalize(gaussianDistribution);
             // R: pass the 1D kernel to the effect
-            effect2Blur.Parameters["BlurKernel"].SetValue(gaussianDistribution);
+            effectE6Blur.Parameters["BlurKernel"].SetValue(gaussianDistribution);
 
-            // R: scene 3
-            mirrorEffect = this.Content.Load<Effect>("Effects/Effect4");
+            // R: scene M3
+            // NB: scene M3 reuses the model+effect from E6
+            // Load the effect of the mirror
+            mirrorEffect = this.Content.Load<Effect>("Effects/EffectM3Mirror");
             mirrorEffect.CurrentTechnique = mirrorEffect.Techniques["Technique1"];
             mirrorScale = 35.0f;
             // R: define the position of the mirror
@@ -253,57 +246,57 @@ namespace GraphicsPractical3
             this.Window.Title = "XNA Renderer | FPS: " + this.frameRateCounter.FrameRate;
 
             // R: update the scenes
-            // R: update scene 0
+            // R: update scene E1
             if (displayNumber == 0)
             {
                 // R: Get the model's only effect
-                Effect effect0 = this.models[0].Meshes[0].Effects[0];
+                Effect effectE1 = this.models[0].Meshes[0].Effects[0];
 
                 // Matrices for 3D perspective projection
-                this.camera.SetEffectParameters(effect0);
+                this.camera.SetEffectParameters(effectE1);
 
                 // R: create the world matrix for the model
-                Matrix World0 = Matrix.CreateScale(150f) * Matrix.CreateTranslation(100 * (displayNumber), -12, 0) * Matrix.CreateRotationY(angle);
+                Matrix World = Matrix.CreateScale(150f) * Matrix.CreateTranslation(100 * (displayNumber), -12, 0) * Matrix.CreateRotationY(angle);
 
                 // R: set the world matrix to the effect
-                effect0.Parameters["World"].SetValue(World0);
-                effect0.Parameters["InverseTransposeWorld"].SetValue(Matrix.Transpose(Matrix.Invert(World0)));
+                effectE1.Parameters["World"].SetValue(World);
+                effectE1.Parameters["InverseTransposeWorld"].SetValue(Matrix.Transpose(Matrix.Invert(World)));
             }
 
-            // R: update scene 2
+            // R: update scene E6
             if (displayNumber == 2)
             {
                 // R: Get the model's only effect
-                Effect effect2 = this.models[2].Meshes[0].Effects[0];
+                Effect effectE6 = this.models[2].Meshes[0].Effects[0];
 
                 // Matrices for 3D perspective projection
-                this.camera.SetEffectParameters(effect2);
+                this.camera.SetEffectParameters(effectE6);
 
                 // R: create the world matrix for the model
-                Matrix World2 = Matrix.CreateScale(150f) * Matrix.CreateTranslation(100 * (displayNumber - 2), -12, 0) * Matrix.CreateRotationY(angle);
+                Matrix World = Matrix.CreateScale(150f) * Matrix.CreateTranslation(100 * (displayNumber - 2), -12, 0) * Matrix.CreateRotationY(angle);
 
                 // R: set the world matrix to the effect
-                effect2.Parameters["World"].SetValue(World2);
-                effect2.Parameters["InverseTransposeWorld"].SetValue(Matrix.Transpose(Matrix.Invert(World2)));
+                effectE6.Parameters["World"].SetValue(World);
+                effectE6.Parameters["InverseTransposeWorld"].SetValue(Matrix.Transpose(Matrix.Invert(World)));
             } 
             
-            // R: update scene 4
-            // it's the same as scene 2
+            // R: update scene M3
+            // it's the same as scene E6
             if (displayNumber == 4)
             {
                 // R: update the scene
                 // R: Get the model's only effect
-                Effect effect2 = this.models[2].Meshes[0].Effects[0];
+                Effect effectE6 = this.models[2].Meshes[0].Effects[0];
 
                 // Matrices for 3D perspective projection
-                this.camera.SetEffectParameters(effect2);
+                this.camera.SetEffectParameters(effectE6);
 
                 // R: create the world matrix for the model
-                Matrix World4 = Matrix.CreateScale(150f) * Matrix.CreateTranslation(100 * (displayNumber - 4), -12, 0) * Matrix.CreateRotationY(angle);
+                Matrix World = Matrix.CreateScale(150f) * Matrix.CreateTranslation(100 * (displayNumber - 4), -12, 0) * Matrix.CreateRotationY(angle);
 
                 // R: set the world matrix to the effect
-                effect2.Parameters["World"].SetValue(World4);
-                effect2.Parameters["InverseTransposeWorld"].SetValue(Matrix.Transpose(Matrix.Invert(World4)));
+                effectE6.Parameters["World"].SetValue(World);
+                effectE6.Parameters["InverseTransposeWorld"].SetValue(Matrix.Transpose(Matrix.Invert(World)));
 
                 // R: update the mirror
                 // R: create the world position matrix for the mirrorQuad
@@ -325,42 +318,21 @@ namespace GraphicsPractical3
 
             // TODO: Add your drawing code here
             // R: Draw the scenes 
-            // R: draw scene 0
+            // R: draw scene E1
             if (displayNumber == 0)
             {
                 GraphicsDevice.Clear(ClearOptions.Target | ClearOptions.DepthBuffer, Color.CornflowerBlue, 1.0f, 0);
                 
                 // R: get the model's only mesh
-                ModelMesh mesh0 = this.models[0].Meshes[0];
+                ModelMesh meshE1 = this.models[0].Meshes[0];
 
                 // R: draw the mesh
-                mesh0.Draw();
+                meshE1.Draw();
             }
 
-            if (displayNumber == 1)
-            {
-                GraphicsDevice.Clear(ClearOptions.Target | ClearOptions.DepthBuffer, Color.CornflowerBlue, 1.0f, 0);
-                
-                // R: draw scene 1
-                // R: Get the model's only mesh
-                ModelMesh mesh1 = this.models[1].Meshes[0];
-                Effect effect1 = mesh1.Effects[0];
+            
 
-                // R: Set the effect parameters
-                effect1.CurrentTechnique = effect1.Techniques["Technique1"];
-                // Matrices for 3D perspective projection
-                this.camera.SetEffectParameters(effect1);
-
-                // R: create the world matrix for the model
-                Matrix World1 = Matrix.CreateScale(0.5f) * Matrix.CreateTranslation(100 * (displayNumber - 1), 0, 0);
-
-                // R: set the world matrix to the effect
-                effect1.Parameters["World"].SetValue(World1);
-
-                mesh1.Draw();
-            }
-
-            // R: Draw scene 2
+            // R: Draw scene E6
             if (displayNumber == 2)
             {
                 // R: set render target to texture before clearing
@@ -368,14 +340,14 @@ namespace GraphicsPractical3
                 GraphicsDevice.Clear(ClearOptions.Target | ClearOptions.DepthBuffer, Color.CornflowerBlue, 1.0f, 0);
                 
                 // R: get the model's only mesh
-                ModelMesh mesh2 = this.models[2].Meshes[0];
+                ModelMesh meshE6 = this.models[2].Meshes[0];
                 // R: get the model's effect
-                Effect effect2 = mesh2.Effects[0];
+                Effect effectE6 = meshE6.Effects[0];
                 // R: set the technique
-                effect2.CurrentTechnique = effect2.Techniques["RenderScene"];
+                effectE6.CurrentTechnique = effectE6.Techniques["RenderScene"];
 
                 // R: draw the mesh
-                mesh2.Draw();
+                meshE6.Draw();
 
                 // R: draw the texture to the second renderTarget
                 GraphicsDevice.SetRenderTarget(renderTargeHorizontalBlur);
@@ -385,18 +357,18 @@ namespace GraphicsPractical3
                 this.camera.Eye = new Vector3(0, 0, 100);
 
                 // added: set the technique of the quad
-                this.effect2Blur.CurrentTechnique = effect2Blur.Techniques["Technique1"];
+                this.effectE6Blur.CurrentTechnique = effectE6Blur.Techniques["Technique1"];
                 // Matrices for 3D perspective projection
-                this.camera.SetEffectParameters(effect2Blur);
-                this.effect2Blur.Parameters["World"].SetValue(Matrix.CreateScale(55.5f));
-                this.effect2Blur.Parameters["t"].SetValue((Texture2D)renderTargetOriginal);
+                this.camera.SetEffectParameters(effectE6Blur);
+                this.effectE6Blur.Parameters["World"].SetValue(Matrix.CreateScale(55.5f));
+                this.effectE6Blur.Parameters["t"].SetValue((Texture2D)renderTargetOriginal);
 
                 float BlurDistanceX = 1.0f / (float)this.graphics.PreferredBackBufferWidth;
-                this.effect2Blur.Parameters["BlurDistanceX"].SetValue(BlurDistanceX);
+                this.effectE6Blur.Parameters["BlurDistanceX"].SetValue(BlurDistanceX);
 
                 // added: draw the quad
                 // added: apply effect passes
-                foreach (EffectPass pass in this.effect2Blur.CurrentTechnique.Passes)
+                foreach (EffectPass pass in this.effectE6Blur.CurrentTechnique.Passes)
                 {
                     pass.Apply();
                 }
@@ -408,18 +380,18 @@ namespace GraphicsPractical3
                 // R: draw to the screen
 
                 // added: set the technique of the quad
-                this.effect2Blur.CurrentTechnique = effect2Blur.Techniques["Technique2"];
+                this.effectE6Blur.CurrentTechnique = effectE6Blur.Techniques["Technique2"];
                 // Matrices for 3D perspective projection
-                this.camera.SetEffectParameters(effect2Blur);
-                this.effect2Blur.Parameters["World"].SetValue(Matrix.CreateScale(55.5f));
-                this.effect2Blur.Parameters["t"].SetValue((Texture2D)renderTargeHorizontalBlur);
+                this.camera.SetEffectParameters(effectE6Blur);
+                this.effectE6Blur.Parameters["World"].SetValue(Matrix.CreateScale(55.5f));
+                this.effectE6Blur.Parameters["t"].SetValue((Texture2D)renderTargeHorizontalBlur);
 
                 float BlurDistanceY = 1.0f / (float)this.graphics.PreferredBackBufferHeight;
-                this.effect2Blur.Parameters["BlurDistanceY"].SetValue(BlurDistanceY);
+                this.effectE6Blur.Parameters["BlurDistanceY"].SetValue(BlurDistanceY);
 
                 // added: draw the quad
                 // added: apply effect passes
-                foreach (EffectPass pass in this.effect2Blur.CurrentTechnique.Passes)
+                foreach (EffectPass pass in this.effectE6Blur.CurrentTechnique.Passes)
                 {
                     pass.Apply();
                 }
@@ -430,17 +402,17 @@ namespace GraphicsPractical3
                 this.camera.Eye = new Vector3(0, 50, 100);
             }
 
-            // R: draw scene 4
+            // R: draw scene M3
             if (displayNumber == 4)
             {
                 // R: get the model's only mesh
                 // R: we're reusing the model of scene 2
-                ModelMesh mesh2 = this.models[2].Meshes[0];
+                ModelMesh meshM3 = this.models[2].Meshes[0];
                 // R: get the model's effect
-                Effect effect2 = mesh2.Effects[0];
+                Effect effectE6 = meshM3.Effects[0];
                 // R: set the technique
-                effect2.CurrentTechnique = effect2.Techniques["RenderScene"];
-                camera.SetEffectParameters(effect2);
+                effectE6.CurrentTechnique = effectE6.Techniques["RenderScene"];
+                camera.SetEffectParameters(effectE6);
 
                 // clear the backbuffer, including the stencil
                 GraphicsDevice.Clear(ClearOptions.Target | ClearOptions.DepthBuffer | ClearOptions.Stencil, Color.CornflowerBlue, 1.0f, 0);
@@ -467,21 +439,21 @@ namespace GraphicsPractical3
 
                 // render the scene to the backbuffer where the stencilbuffer == 1, i.e. in the mirrorQuad
                 GraphicsDevice.DepthStencilState = checkMirror;
-                camera.SetEffectParameters(effect2);
-                effect2.Parameters["World"].SetValue(reflectedWorld4);
-                mesh2.Draw();
+                camera.SetEffectParameters(effectE6);
+                effectE6.Parameters["World"].SetValue(reflectedWorld4);
+                meshM3.Draw();
 
                 // undo mirroring of camera and world
                 camera = new Camera(cameraPosition, new Vector3(0, 0, 0), new Vector3(0, 1, 0));
                 // R: recreate the normal world matrix for the model
-                Matrix World4 = Matrix.CreateScale(150f) * Matrix.CreateTranslation(100 * (displayNumber - 4), -12, 0) * Matrix.CreateRotationY(angle);
-                camera.SetEffectParameters(effect2);
-                effect2.Parameters["World"].SetValue(World4);
+                Matrix World = Matrix.CreateScale(150f) * Matrix.CreateTranslation(100 * (displayNumber - 4), -12, 0) * Matrix.CreateRotationY(angle);
+                camera.SetEffectParameters(effectE6);
+                effectE6.Parameters["World"].SetValue(World);
 
                 // render the scene to the backbuffer normally
                 GraphicsDevice.DepthStencilState = DepthStencilState.Default;
                 GraphicsDevice.Clear(ClearOptions.Stencil | ClearOptions.DepthBuffer, Color.CornflowerBlue, 1.0f, 0);
-                mesh2.Draw();
+                meshM3.Draw();
             }
 
             base.Draw(gameTime);

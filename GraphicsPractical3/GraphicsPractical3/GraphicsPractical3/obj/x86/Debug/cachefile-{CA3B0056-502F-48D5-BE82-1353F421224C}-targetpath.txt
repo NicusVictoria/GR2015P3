@@ -1,8 +1,0 @@
-Content\Effects\Effect1.xnb
-Content\Effects\Effect0.xnb
-Content\Models\bunny.xnb
-Content\Models\femalehead.xnb
-Content\Effects\Effect2.xnb
-Content\Models\bunny2.xnb
-Content\Effects\Effect2_blur.xnb
-Content\Effects\Effect4.xnb

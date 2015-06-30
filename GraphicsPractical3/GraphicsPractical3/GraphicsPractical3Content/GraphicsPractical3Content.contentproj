@@ -29,16 +29,7 @@
     <Reference Include="Microsoft.Xna.Framework.Content.Pipeline.AudioImporters, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.Xna.Framework.Content.Pipeline.VideoImporters, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=MSIL" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Effects\Effect1.fx">
-      <Name>Effect1</Name>
-      <Importer>EffectImporter</Importer>
-      <Processor>EffectProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Textures\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Compile Include="Models\bunny.fbx">
       <Name>bunny</Name>
@@ -52,15 +43,15 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Effects\Effect0.fx">
-      <Name>Effect0</Name>
+    <Compile Include="Effects\EffectE1.fx">
+      <Name>EffectE1</Name>
       <Importer>EffectImporter</Importer>
       <Processor>EffectProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Effects\Effect2.fx">
-      <Name>Effect2</Name>
+    <Compile Include="Effects\EffectE6M3.fx">
+      <Name>EffectE6M3</Name>
       <Importer>EffectImporter</Importer>
       <Processor>EffectProcessor</Processor>
     </Compile>
@@ -73,17 +64,31 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Effects\Effect2_blur.fx">
-      <Name>Effect2_blur</Name>
+    <Compile Include="Effects\EffectE6M3_blur.fx">
+      <Name>EffectE6M3_blur</Name>
       <Importer>EffectImporter</Importer>
       <Processor>EffectProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Effects\Effect4.fx">
-      <Name>Effect4</Name>
+    <Compile Include="Effects\EffectM3Mirror.fx">
+      <Name>EffectM3Mirror</Name>
       <Importer>EffectImporter</Importer>
       <Processor>EffectProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Effects\QueenEffect.fx">
+      <Name>QueenEffect</Name>
+      <Importer>EffectImporter</Importer>
+      <Processor>EffectProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\queen.png">
+      <Name>queen</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />
